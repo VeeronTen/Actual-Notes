@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import veeronten.actualnotes.L;
 
 public class MyAudioManager {
     public Boolean recording;
@@ -45,7 +46,7 @@ public class MyAudioManager {
             answer.createNewFile();
             return answer;
         } catch (IOException e) {
-            Log.d("MyLog","cant create new file");
+            L.d("cant create new file");
             return null;
         }
     }
@@ -75,7 +76,7 @@ public class MyAudioManager {
                 mediaPlayer.prepare();
                 answer = mediaPlayer.getDuration()/1000;
             } catch (Exception e) {
-                Log.d("MyLog","b",e);
+                L.d("b",e);
             }
 
         return  answer;
@@ -96,7 +97,7 @@ public class MyAudioManager {
             mediaRecorder.start();
             recording=true;
         } catch (IOException e) {
-            Log.d("MyLog","be da", e);
+            L.d("be da", e);
         }
 
     }
@@ -123,7 +124,7 @@ public class MyAudioManager {
             mediaPlayer.start();
             playing = true;
         } catch (Exception e) {
-            Log.d("MyLog","b",e);
+            L.d("b",e);
         }
     }
     public void stopPlay() {

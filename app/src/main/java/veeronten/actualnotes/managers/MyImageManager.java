@@ -3,7 +3,6 @@ package veeronten.actualnotes.managers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import veeronten.actualnotes.L;
 
 public class MyImageManager {
     private Context context;
@@ -38,7 +39,7 @@ public class MyImageManager {
             answer.createNewFile();
             return answer;
         } catch (IOException e) {
-            Log.d("MyLog","cant create new file");
+            L.d("cant create new file");
             return null;
         }
     }
@@ -61,7 +62,7 @@ public class MyImageManager {
 
             return mini;
         } catch (Exception e) {
-            Log.d("MyLog","cant create new file");
+            L.d("cant create new file");
             return null;
         }
     }

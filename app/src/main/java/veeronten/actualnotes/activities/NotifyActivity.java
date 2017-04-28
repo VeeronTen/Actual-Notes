@@ -4,7 +4,6 @@ package veeronten.actualnotes.activities;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import veeronten.actualnotes.L;
+import veeronten.actualnotes.MyTimeFormat;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.MainManager;
-import veeronten.actualnotes.MyTimeFormat;
 
 public class NotifyActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
     MainManager mainManager;
@@ -50,7 +50,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             lvNotifications.setOnItemClickListener(this);
             registerForContextMenu(lvNotifications);
             lvNotifications.setAdapter(adapter);
-        Log.i("MyLog", "NotifyActivity was created");
+        L.i("NotifyActivity was created");
     }
     @Override
     public void onClick(View v){
@@ -86,7 +86,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             adapter.notifyDataSetChanged();
             mainManager.notification.saveNotifications(notifyList);
 
-            Log.i("MyLog", itemActionToEdit+" was changed to "+actionToRegister);
+            L.i(itemActionToEdit+" was changed to "+actionToRegister);
     }
     };
 
@@ -119,9 +119,9 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         int position = acmi.position;
-        Log.d("MyLog","pos="+position);
+        L.d("pos="+position);
         String text = notifyList.get(position);
-        Log.d("MyLog","text="+text);
+        L.d("text="+text);
         mainManager.notification.cancelNotification(text);
 
         notifyList.remove(position);

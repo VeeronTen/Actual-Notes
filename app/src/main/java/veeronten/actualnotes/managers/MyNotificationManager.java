@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,13 +17,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import veeronten.actualnotes.L;
 import veeronten.actualnotes.MyBroadcastReceiver;
+import veeronten.actualnotes.MyTimeFormat;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.activities.AudioRecordActivity;
 import veeronten.actualnotes.activities.ExploreActivity;
 import veeronten.actualnotes.activities.ImageActivity;
 import veeronten.actualnotes.activities.TextEditActivity;
-import veeronten.actualnotes.MyTimeFormat;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -53,11 +53,11 @@ public class MyNotificationManager {
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, createPendingIntentWithAction(action));
 
-        Log.i("MyLog",action+" was registered on "+(cal.getTimeInMillis()>System.currentTimeMillis()?"this day":"the next day"));
+        L.i(action+" was registered on "+(cal.getTimeInMillis()>System.currentTimeMillis()?"this day":"the next day"));
     }
     public void cancelNotification(String action){
         am.cancel(createPendingIntentWithAction(action));
-        Log.i("MyLog", action+" was canceled");
+        L.i(action+" was canceled");
     }
 
     public void saveNotifications(ArrayList<String> notifications){
@@ -69,14 +69,14 @@ public class MyNotificationManager {
                 arrayForList.put(notifications.get(i));
             mainObj.put("notifyList", arrayForList);
         } catch (JSONException e){
-            Log.e("MyLog", "JSON exception", e);
+            L.e("JSON exception", e);
         }
         SharedPreferences sPref = context.getSharedPreferences("notifyList", MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("notifyList", mainObj.toString());
         ed.apply();
 
-        Log.i("MyLog", "Notifications were saved.\n\tNow they are "+mainObj.toString());
+        L.i("Notifications were saved.\n\tNow they are "+mainObj.toString());
     }
     public ArrayList<String> downloadNotifications(){
         JSONObject mainObj;
@@ -93,16 +93,16 @@ public class MyNotificationManager {
                 registerNewNotification(actionToRegister);
                 answer.add(arrayForList.getString(i));
             }
-            Log.i("MyLog", "All notifications were downloaded");
+            L.i("All notifications were downloaded");
         } catch (JSONException e) {
-            Log.w("MyLog", "JSON parse fails. JSON is not exist maybe");
+            L.w("JSON parse fails. JSON is not exist maybe");
             return answer;
         }
         return answer;
     }
 
     public void sendUsualNotification(int count){
-        Log.d("MyLog","ВОТ Я ВНУТРИ");
+        L.d("ВОТ Я ВНУТРИ");
         if(count==0)
             return;
         Notification.Builder builder = new Notification.Builder(context);
@@ -124,7 +124,7 @@ public class MyNotificationManager {
         Notification notification = builder.getNotification();
         //notification.flags |= Notification.FLAG_INSISTENT;
         nm.notify(1, notification);
-        Log.d("MyLog","ПОСЛАНО");
+        L.d("ПОСЛАНО");
     }
     public void sendFastAccessNotification(){
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);

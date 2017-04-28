@@ -1,7 +1,6 @@
 package veeronten.actualnotes.managers;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import veeronten.actualnotes.L;
 
 public class MyTextManager {
     private Context context;
@@ -37,7 +38,7 @@ public class MyTextManager {
             answer.createNewFile();
             return answer;
         } catch (IOException e) {
-            Log.d("MyLog","cant create new file");
+            L.d("cant create new file");
             return null;
         }
     }
@@ -61,11 +62,11 @@ public class MyTextManager {
             while((s=br.readLine())!=null)
                 sb.append(s+"\n");
         } catch (FileNotFoundException e) {
-            Log.d("MyLog", "fnf");
+            L.d("fnf");
         } catch (IOException e) {
-            Log.d("MyLog", "io");
+            L.d("io");
         }
-        Log.d("MyLog",sb.toString());
+        L.d(sb.toString());
         return sb.toString();
     }
     public void saveChanges(File file, String text){
@@ -74,9 +75,9 @@ public class MyTextManager {
             bw.write(text);
             bw.flush();
         } catch (FileNotFoundException e) {
-            Log.d("MyLog","fexp");
+            L.d("fexp");
         } catch (IOException e) {
-            Log.d("MyLog","io");
+            L.d("io");
         }
     }
 }

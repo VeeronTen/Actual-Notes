@@ -1,9 +1,14 @@
 package veeronten.actualnotes.activities;
 
+//TODO add a new feature to share the notes from the app
+//TODO the app shows invalid age of notes
+//TODO use the standart camera instead the custom
+//TODO make more receiveres
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.adapters.MyAudioAdapter;
 import veeronten.actualnotes.adapters.MyCommonAdapter;
@@ -28,8 +34,7 @@ import veeronten.actualnotes.managers.MainManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
 
-//TODO add a new feature to share the notes from the app
-//TODO the app shows invalid age of notes
+
 
 
 public class ExploreActivity extends AppCompatActivity implements  View.OnClickListener, ListView.OnItemClickListener{
@@ -112,7 +117,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 break;
             case 'i':
                 item = mainManager.image.getBig((modeFiles.get(position)).getName());
-                Log.d("MyLog", item.toString());
+                L.d(item.toString());
                 intent = new Intent(this, LookActivity.class);
                 intent.putExtra("path", item.getAbsolutePath());
                 startActivity(intent);
@@ -182,7 +187,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     @Override
     public void onResume(){
         super.onResume();
-Log.d("MyLog","KKK");
+L.d("KKK");
         if(mode!=null)
             switch (mode) {
                 case COMMON:

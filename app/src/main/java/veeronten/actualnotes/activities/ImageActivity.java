@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.MainManager;
 
@@ -74,10 +74,10 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                     Camera.Size previewSize = camera.getParameters().getPreviewSize();
 //
                     ViewGroup.LayoutParams lp = surfaceView.getLayoutParams();
-                    Log.d("MyLog", "camH " + previewSize.height);
-                    Log.d("MyLog", "camW " + previewSize.width);
-                    Log.d("MyLog", "surH " + surfaceView.getHeight());
-                    Log.d("MyLog", "surW " + surfaceView.getWidth());
+                    L.d("camH " + previewSize.height);
+                    L.d("camW " + previewSize.width);
+                    L.d("surH " + surfaceView.getHeight());
+                    L.d("surW " + surfaceView.getWidth());
 
                     int camH = previewSize.width;
                     int camW = previewSize.height;
@@ -85,7 +85,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                     int dif = surfaceView.getWidth() - camW;
                     float coaf = (float) dif / (float) camW;
 
-                    Log.d("MyLog", coaf + "");
+                    L.d(coaf + "");
 //                    // здесь корректируем размер отображаемого preview, чтобы не было искажений
 //
 
@@ -101,7 +101,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
                     camera.startPreview();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.printStackTrace(e);
                 }
             }
 
@@ -151,7 +151,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
                     finish();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    L.printStackTrace(e);
                 }
 
 
@@ -179,7 +179,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                             btnOk.setVisibility(View.VISIBLE);
                             btnAgain.setVisibility(View.VISIBLE);
                         } catch (Exception e) {
-                            Log.d("MyLog", "omg", e);
+                            L.d("omg", e);
                         }
                     }
                 });
