@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/audioBtn"
+    android:padding="3dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:padding="8dp"
+        android:background="@color/font">
+
+
+        <ImageView
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/item_micro"
+            android:id="@+id/imageView2" />
+
+        <TextView
+            android:textColor="@color/textColor"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textView" />
+
+        <TextView
+            android:textColor="@color/textColor"
+            android:layout_toRightOf="@+id/textView"
+            android:layout_alignParentBottom="true"
+            android:gravity="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2" />
+    </RelativeLayout>
+</LinearLayout>

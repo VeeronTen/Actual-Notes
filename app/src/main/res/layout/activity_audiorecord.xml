@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_audiorecord"
+    android:orientation="vertical"
+    android:background="@color/font"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:background="@color/ButtonColor"
+            app:srcCompat="@drawable/ic_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:background="@color/ButtonColor"
+            app:srcCompat="@drawable/ic_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <ImageButton
+            android:id="@+id/btnCancel"
+            android:background="@color/ButtonColor"
+            app:srcCompat="@drawable/ic_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
+    <ImageView
+        app:srcCompat="@drawable/pc_micro"
+        android:id="@+id/microImage"
+        android:layout_above="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="0 s"
+        android:scaleX="6"
+        android:scaleY="6"
+        android:textColor="@color/textColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttons"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="27dp"
+        android:id="@+id/tvTime" />
+</RelativeLayout>

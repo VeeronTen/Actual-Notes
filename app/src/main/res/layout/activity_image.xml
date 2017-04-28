@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_image"
+    android:background="@color/font"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="veeronten.actualnotes.activities.ImageActivity">
+
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+ />
+<LinearLayout
+    android:id="@+id/buttons"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageButton
+        android:id="@+id/btnOk"
+        app:srcCompat="@drawable/ic_add"
+        android:background="@color/ButtonColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"/>
+    <ImageButton
+        android:id="@+id/btnAgain"
+        app:srcCompat="@drawable/ic_again"
+        android:background="@color/ButtonColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"/>
+</LinearLayout>
+
+</RelativeLayout>

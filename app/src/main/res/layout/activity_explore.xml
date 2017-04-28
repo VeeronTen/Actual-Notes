@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_explore"
+    android:background="@color/font"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="veeronten.actualnotes.activities.ExploreActivity">
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttons"/>
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
+        <ImageButton
+            app:srcCompat="@drawable/ic_common"
+            android:background="@color/ButtonColorExplore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnCommonMode"
+            android:elevation="0dp" />
+        <ImageButton
+            app:srcCompat="@drawable/ic_camera"
+            android:background="@color/ButtonColorExplore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnImageMode"
+            android:elevation="0dp" />
+        <ImageButton
+            app:srcCompat="@drawable/ic_text"
+            android:background="@color/ButtonColorExplore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnTextMode" />
+        <ImageButton
+            app:srcCompat="@drawable/ic_audio"
+            android:background="@color/ButtonColorExplore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnAudioMode" />
+
+    </LinearLayout>
+
+</RelativeLayout>

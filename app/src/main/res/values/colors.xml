@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="textBtn">#4057AA</color>
+    <color name="audioBtn">#BE1515</color>
+    <color name="imageBtn">#FF790A</color>
+    <color name="commonBtn">#000</color>
+
+    <color name="deactBtn">#000</color>
+
+
+    <color name="font">#111</color>
+
+    <color name="textColor">#FFF</color>
+
+    <color name="iconsColor">#000</color>
+    <color name="ButtonColor">#FFF</color>
+
+    <color name="iconsColorExplore">#FFF</color>
+    <color name="ButtonColorExplore">#000</color>
+
+    <color name="microOff">#FFF</color>
+    <color name="microOn">#0F0</color>
+
+
+</resources>
