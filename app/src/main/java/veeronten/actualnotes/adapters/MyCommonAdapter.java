@@ -14,15 +14,15 @@ import java.io.File;
 import java.util.List;
 
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 public class MyCommonAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
-    MainManager mainManager;
+    FileManager fileManager;
 
     public MyCommonAdapter(Context context, List<File> objects) {
         super(context, R.layout.item_image, objects);
-        mainManager = mainManager.getInstance();
+        fileManager = fileManager.getInstance();
     }
 
     @Override
@@ -33,11 +33,11 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
 
 
         li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        switch (mainManager.getFileType(getItem(pos))) {
+        switch (fileManager.typeOf(getItem(pos))) {
             case 'i':
                 v = li.inflate(R.layout.item_image, null);
                 tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(mainManager.getAge(getItem(pos)));
+                tv.setText(fileManager.ageOf(getItem(pos)));
 
                 Bitmap bitmap = BitmapFactory.decodeFile(getItem(pos).getAbsolutePath());
                 ImageView iv = (ImageView) v.findViewById(R.id.imageView);
@@ -46,18 +46,18 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
             case 'a':
                 v = li.inflate(R.layout.item_audio, null);
                 tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(mainManager.audio.getDuration(getItem(pos)) + " s.");
+                tv.setText(fileManager.audio.getDuration(getItem(pos)) + " s.");
 
                 tv2 = (TextView) v.findViewById(R.id.textView2);
-                tv2.setText(mainManager.getAge(getItem(pos)));
+                tv2.setText(fileManager.ageOf(getItem(pos)));
                 break;
             case 't':
                 v = li.inflate(R.layout.item_text, null);
                 tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(mainManager.text.readFile(getItem(pos)));
+                tv.setText(fileManager.text.readFile(getItem(pos)));
 
                 tv2 = (TextView) v.findViewById(R.id.textView2);
-                tv2.setText(mainManager.getAge(getItem(pos)));
+                tv2.setText(fileManager.ageOf(getItem(pos)));
                 break;
         }
         return v;

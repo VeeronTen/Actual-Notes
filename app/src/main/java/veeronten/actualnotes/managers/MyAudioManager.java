@@ -60,6 +60,11 @@ public class MyAudioManager {
             answer.add(f);
         return  answer;
     }
+
+    public int countOfFiles(){
+        return audioRoot.listFiles().length;
+    }
+
     public int getDuration(File f){
         int answer=0;
 

@@ -1,9 +1,10 @@
 package veeronten.actualnotes.activities;
 
 //TODO add a new feature to share the notes from the app
-//TODO the app shows invalid age of notes
 //TODO use the standart camera instead the custom
 //TODO make more receiveres
+//TODO create typeManager interface, which will be implemented by audio-, video- and text- managers
+//TODO create an ENUM for types of notes
 
 
 import android.content.Intent;
@@ -30,7 +31,7 @@ import veeronten.actualnotes.adapters.MyAudioAdapter;
 import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.adapters.MyImageAdapter;
 import veeronten.actualnotes.adapters.MyTextAdapter;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
 
@@ -43,7 +44,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
 
     ViewGroup layout;
 
-    MainManager mainManager;
+    FileManager fileManager;
 
     ListView list;
     ArrayList<File> modeFiles;
@@ -60,9 +61,9 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
 
-        if(MainManager.getInstance()==null)
-            new MainManager(getApplicationContext());
-        mainManager = mainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(getApplicationContext());
+        fileManager = fileManager.getInstance();
 
         //cache = new BitmapCache(imageManager);
 
@@ -81,7 +82,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             btnImageMode.setOnClickListener(this);
 
         commonMode();
-        mainManager.notification.sendFastAccessNotification();
+        fileManager.notification.sendFastAccessNotification();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,15 +100,15 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         File item;
         Intent intent;
-        char fmode = mainManager.getFileType(modeFiles.get(position));
+        char fmode = fileManager.typeOf(modeFiles.get(position));
 
         switch (fmode) {
             case 'a':
                 item = modeFiles.get(position);
-                if(mainManager.audio.playing)
-                    mainManager.audio.stopPlay();
+                if(fileManager.audio.playing)
+                    fileManager.audio.stopPlay();
                 else
-                    mainManager.audio.startPlay(item);
+                    fileManager.audio.startPlay(item);
                 break;
             case 't':
                 item = modeFiles.get(position);
@@ -116,7 +117,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 startActivity(intent);
                 break;
             case 'i':
-                item = mainManager.image.getBig((modeFiles.get(position)).getName());
+                item = fileManager.image.getBig((modeFiles.get(position)).getName());
                 L.d(item.toString());
                 intent = new Intent(this, LookActivity.class);
                 intent.putExtra("path", item.getAbsolutePath());
@@ -135,18 +136,18 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         File fileToRemove = modeFiles.get(acmi.position);
 
-        switch (mainManager.getFileType(fileToRemove)) {
+        switch (fileManager.typeOf(fileToRemove)) {
             case 'a':
                 modeFiles.remove(acmi.position);
-                mainManager.audio.removeFile(fileToRemove);
+                fileManager.audio.removeFile(fileToRemove);
                 break;
             case 't':
                 modeFiles.remove(acmi.position);
-                mainManager.text.removeFile(fileToRemove);
+                fileManager.text.removeFile(fileToRemove);
                 break;
             case 'i':
                 modeFiles.remove(acmi.position);
-                mainManager.image.removeMini(fileToRemove);
+                fileManager.image.removeMini(fileToRemove);
                 break;
         }
         currentAdapter.notifyDataSetChanged();
@@ -211,9 +212,9 @@ L.d("KKK");
 
     private void  commonMode(){
         mode = Mode.COMMON;
-        modeFiles = mainManager.text.getFiles();
-        modeFiles.addAll(mainManager.audio.getFiles());
-        modeFiles.addAll(mainManager.image.getMinis());
+        modeFiles = fileManager.text.getFiles();
+        modeFiles.addAll(fileManager.audio.getFiles());
+        modeFiles.addAll(fileManager.image.getMinis());
 
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this, modeFiles);
@@ -226,7 +227,7 @@ L.d("KKK");
 
 
         mode = Mode.TEXT;
-        modeFiles = mainManager.text.getFiles();
+        modeFiles = fileManager.text.getFiles();
         modeFiles = sort(modeFiles);
         currentAdapter = new MyTextAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
@@ -239,7 +240,7 @@ L.d("KKK");
 
 
         mode = Mode.AUDIO;
-        modeFiles = mainManager.audio.getFiles();
+        modeFiles = fileManager.audio.getFiles();
         modeFiles = sort(modeFiles);
         currentAdapter = new MyAudioAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);
@@ -253,7 +254,7 @@ L.d("KKK");
 
 
         mode = IMAGE;
-        modeFiles = mainManager.image.getMinis();
+        modeFiles = fileManager.image.getMinis();
         modeFiles = sort(modeFiles);
         currentAdapter = new MyImageAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);

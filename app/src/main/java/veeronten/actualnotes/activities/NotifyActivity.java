@@ -20,10 +20,10 @@ import java.util.Comparator;
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.MyTimeFormat;
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 public class NotifyActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
-    MainManager mainManager;
+    FileManager fileManager;
 
     ImageButton btnCreate;
     ListView lvNotifications;
@@ -37,11 +37,11 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
 
-        if(MainManager.getInstance()==null)
-            new MainManager(getApplicationContext());
-        mainManager = mainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(getApplicationContext());
+        fileManager = fileManager.getInstance();
 
-        notifyList=mainManager.notification.downloadNotifications();
+        notifyList=fileManager.notification.downloadNotifications();
         adapter = new ArrayAdapter<>(NotifyActivity.this, R.layout.item_notif, notifyList);
 
         btnCreate = (ImageButton)findViewById(R.id.btnCreate);
@@ -72,10 +72,10 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             if(notifyList.contains(actionToRegister))
                 return;
 
-            mainManager.notification.cancelNotification(itemActionToEdit);
+            fileManager.notification.cancelNotification(itemActionToEdit);
             notifyList.remove(notifyList.indexOf(itemActionToEdit));
 
-            mainManager.notification.registerNewNotification(actionToRegister);
+            fileManager.notification.registerNewNotification(actionToRegister);
             notifyList.add(actionToRegister);
 
             Collections.sort(notifyList, new Comparator<String>() {
@@ -84,7 +84,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
                 }
             });
             adapter.notifyDataSetChanged();
-            mainManager.notification.saveNotifications(notifyList);
+            fileManager.notification.saveNotifications(notifyList);
 
             L.i(itemActionToEdit+" was changed to "+actionToRegister);
     }
@@ -97,7 +97,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
 
             if(notifyList.contains(actionToRegister))
                 return;
-            mainManager.notification.registerNewNotification(actionToRegister);
+            fileManager.notification.registerNewNotification(actionToRegister);
             notifyList.add(actionToRegister);
             Collections.sort(notifyList, new Comparator<String>() {
                         public int compare(String o1, String o2) {
@@ -105,7 +105,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     });
             adapter.notifyDataSetChanged();
-            mainManager.notification.saveNotifications(notifyList);
+            fileManager.notification.saveNotifications(notifyList);
         }
     };
 
@@ -122,11 +122,11 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
         L.d("pos="+position);
         String text = notifyList.get(position);
         L.d("text="+text);
-        mainManager.notification.cancelNotification(text);
+        fileManager.notification.cancelNotification(text);
 
         notifyList.remove(position);
         adapter.notifyDataSetChanged();
-        mainManager.notification.saveNotifications(notifyList);
+        fileManager.notification.saveNotifications(notifyList);
         return true;
     }
 

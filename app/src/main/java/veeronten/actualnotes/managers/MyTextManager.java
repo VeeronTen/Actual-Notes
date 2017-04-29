@@ -53,6 +53,10 @@ public class MyTextManager {
         return  answer;
     }
 
+    public int countOfFiles(){
+        return textRoot.listFiles().length;
+    }
+
     public String readFile(File file){
         StringBuffer sb = new StringBuffer();
         try {

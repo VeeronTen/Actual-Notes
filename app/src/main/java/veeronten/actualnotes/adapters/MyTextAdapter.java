@@ -11,15 +11,15 @@ import java.io.File;
 import java.util.List;
 
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 public class MyTextAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
-    MainManager mainManager;
+    FileManager fileManager;
 
     public MyTextAdapter(Context context, List<File> objects) {
         super(context, R.layout.item_text, objects);
-        mainManager = mainManager.getInstance();
+        fileManager = fileManager.getInstance();
     }
 
     @Override
@@ -30,10 +30,10 @@ public class MyTextAdapter extends ArrayAdapter<File> {
             v=li.inflate(R.layout.item_text, null);
         }
         TextView tv = (TextView)v.findViewById(R.id.textView);
-        tv.setText(mainManager.text.readFile(getItem(pos)));
+        tv.setText(fileManager.text.readFile(getItem(pos)));
 
         TextView tv2 = (TextView)v.findViewById(R.id.textView2);
-        tv2.setText(mainManager.getAge(getItem(pos)));
+        tv2.setText(fileManager.ageOf(getItem(pos)));
         return v;
     }
 

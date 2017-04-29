@@ -4,26 +4,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
-    MainManager mainManager;
+    FileManager fileManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         L.d("ПРИНЯТО");
-        if(MainManager.getInstance()==null)
-            new MainManager(context);
-        mainManager = MainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(context);
+        fileManager = FileManager.getInstance();
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             L.i("Soft was restarted");
-            mainManager.notification.sendFastAccessNotification();
-            mainManager.notification.downloadNotifications();
+            fileManager.notification.sendFastAccessNotification();
+            fileManager.notification.downloadNotifications();
             return;
         }
         L.i("Signal was received");
-        mainManager.notification.sendUsualNotification(mainManager.count());
+        fileManager.notification.sendUsualNotification(fileManager.countOfFiles());
     }
 }

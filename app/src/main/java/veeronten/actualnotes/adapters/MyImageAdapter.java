@@ -14,15 +14,15 @@ import java.io.File;
 import java.util.List;
 
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 public class MyImageAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
-    MainManager mainManager;
+    FileManager fileManager;
 
     public MyImageAdapter(Context context, List<File> objects) {
         super(context, R.layout.item_image, objects);
-        mainManager = mainManager.getInstance();
+        fileManager = fileManager.getInstance();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class MyImageAdapter extends ArrayAdapter<File> {
             v=li.inflate(R.layout.item_image, null);
         }
         TextView tv = (TextView)v.findViewById(R.id.textView);
-        tv.setText(mainManager.getAge(getItem(pos)));
+        tv.setText(fileManager.ageOf(getItem(pos)));
 
 
 

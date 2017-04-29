@@ -6,10 +6,9 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class MainManager {
+public class FileManager {
 
-
-    public static MainManager instance;
+    public static FileManager instance;
 
     public MyImageManager image;
     public MyTextManager text;
@@ -17,25 +16,25 @@ public class MainManager {
 
     public MyNotificationManager notification;
 
-    public MainManager(Context context){
+    public FileManager(Context context){
         audio = new MyAudioManager(context);
         image = new MyImageManager(context);
         text = new MyTextManager(context);
         notification = new MyNotificationManager(context);
         instance = this;
     }
-    public static MainManager getInstance(){
+    public static FileManager getInstance(){
         return instance;
     }
 
-    public int count(){
-        int answer=image.getMinis().size()+text.getFiles().size()+audio.getFiles().size();
+    public int countOfFiles(){
+        int answer=image.countOfFiles()+text.countOfFiles()+audio.countOfFiles();
         return answer;
     }
-    public String getAge(File f){
+    public String ageOf(File f){
         String answer;
 
-        int count;
+        long count;
         String name = f.getName();
         String[] mas = name.split("-|:");
 
@@ -44,7 +43,7 @@ public class MainManager {
                 Integer.valueOf(mas[2]),Integer.valueOf(mas[3]),Integer.valueOf(mas[4]),Integer.valueOf(mas[5]));
 
 
-        count=(int)(now.getTimeInMillis()-fileCal.getTimeInMillis())/1000/60/60;
+        count=(long)(now.getTimeInMillis()-fileCal.getTimeInMillis())/1000/60/60;
         if(count>23){
             count/=24;
             answer=count+" days";
@@ -52,7 +51,7 @@ public class MainManager {
             answer=count+" hours";
         return answer;
     }
-    public char getFileType(File f){
+    public char typeOf(File f){
         String[] mas = f.getName().split("-");
         switch (mas[5]){
             case "t":

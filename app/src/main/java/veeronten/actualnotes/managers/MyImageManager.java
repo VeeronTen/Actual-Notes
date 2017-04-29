@@ -78,6 +78,10 @@ public class MyImageManager {
         return  answer;
     }
 
+    public int countOfFiles(){
+        return mimiRoot.listFiles().length;
+    }
+
 
     public File getBig(String name){
         return new File(imageRoot, name);

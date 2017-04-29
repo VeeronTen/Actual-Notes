@@ -11,12 +11,12 @@ import android.widget.Toast;
 import java.io.File;
 
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 
 public class TextEditActivity extends AppCompatActivity{
     EditText textEditor;
-    MainManager mainManager;
+    FileManager fileManager;
     File fileToEdit;
     Boolean saveWhenClosing;
     //ViewGroup layout;
@@ -26,9 +26,9 @@ public class TextEditActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textedit);
 
-        if(MainManager.getInstance()==null)
-            new MainManager(getApplicationContext());
-        mainManager = mainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(getApplicationContext());
+        fileManager = fileManager.getInstance();
 
         //layout = (LinearLayout) findViewById(R.id.activity_textedit);
         textEditor =(EditText) findViewById(R.id.textEditor);
@@ -49,14 +49,14 @@ public class TextEditActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.item_save) {
-            mainManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
+            fileManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
         }else if(item.getItemId()==R.id.item_close) {
             saveWhenClosing=false;
             finish();
         }else if(item.getItemId()==R.id.item_delete){
             saveWhenClosing=false;
-            mainManager.text.removeFile(fileToEdit);
+            fileManager.text.removeFile(fileToEdit);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -66,9 +66,9 @@ public class TextEditActivity extends AppCompatActivity{
         super.onPause();
         if(saveWhenClosing) {
             if(textEditor.getText().toString().equals(""))
-                mainManager.text.removeFile(fileToEdit);
+                fileManager.text.removeFile(fileToEdit);
             else {
-                mainManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
+                fileManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
                 Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
             }
         }
@@ -82,17 +82,17 @@ public class TextEditActivity extends AppCompatActivity{
         answer= intent.getStringExtra(Intent.EXTRA_TEXT);
 
         if(answer!=null){
-            fileToEdit = mainManager.text.createNewFile();
+            fileToEdit = fileManager.text.createNewFile();
             return answer;
         }
 
 
         path = intent.getStringExtra("path");
         if(path == null)
-            fileToEdit = mainManager.text.createNewFile();
+            fileToEdit = fileManager.text.createNewFile();
         else
             fileToEdit = new File(path);
-        answer = mainManager.text.readFile(fileToEdit);
+        answer = fileManager.text.readFile(fileToEdit);
         return  answer;
     }
 }

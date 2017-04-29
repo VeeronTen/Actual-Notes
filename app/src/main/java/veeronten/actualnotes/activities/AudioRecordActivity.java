@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 
 public class AudioRecordActivity extends AppCompatActivity implements View.OnClickListener{
@@ -24,7 +24,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     ImageButton btnCancel;
     ImageButton btnSave;
     File fileToRecord;
-    MainManager mainManager;
+    FileManager fileManager;
 
     ImageView microImage;
     TextView tvTime;
@@ -35,9 +35,9 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audiorecord);
-        if(MainManager.getInstance()==null)
-            new MainManager(getApplicationContext());
-        mainManager = mainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(getApplicationContext());
+        fileManager = fileManager.getInstance();
 
         microImage = (ImageView)findViewById(R.id.microImage);
 
@@ -54,23 +54,23 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave.setVisibility(View.INVISIBLE);
 
         tvTime = (TextView) findViewById(R.id.tvTime);
-        fileToRecord = mainManager.audio.createNewFile();
+        fileToRecord = fileManager.audio.createNewFile();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activity_audiorecord:
-                if(mainManager.audio.recording){
+                if(fileManager.audio.recording){
                     timer.cancel();
                     try {
-                        mainManager.audio.stopRecording();
+                        fileManager.audio.stopRecording();
                     }catch (RuntimeException e){
                         fileToRecord.delete();
                         recreate();
                     }
                     microImage.setColorFilter(getResources().getColor(R.color.microOff));
-                    mainManager.audio.recording=false;
+                    fileManager.audio.recording=false;
                     btnPlay.setVisibility(View.VISIBLE);
                     btnCancel.setVisibility(View.VISIBLE);
                     btnSave.setVisibility(View.VISIBLE);
@@ -79,25 +79,25 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                     btnCancel.setVisibility(View.INVISIBLE);
                     btnSave.setVisibility(View.INVISIBLE);
                     tvTime.setText("0 s");
-                    microImage.setColorFilter(getResources().getColor(R.color.microOn));                    mainManager.audio.stopPlay();
-                    mainManager.audio.startRecording(fileToRecord);
+                    microImage.setColorFilter(getResources().getColor(R.color.microOn));                    fileManager.audio.stopPlay();
+                    fileManager.audio.startRecording(fileToRecord);
 
                     timer = new Timer();
                     timer.schedule(new MyTimerTask(), 0, 1000);
 
-                    mainManager.audio.recording=true;
+                    fileManager.audio.recording=true;
                 }
                 break;
             case R.id.btnPlay:
-                mainManager.audio.startPlay(fileToRecord);
+                fileManager.audio.startPlay(fileToRecord);
                 break;
             case R.id.btnCancel:
                 btnPlay.setVisibility(View.INVISIBLE);
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnSave.setVisibility(View.INVISIBLE);
-                mainManager.audio.stopPlay();
-                mainManager.audio.removeFile(fileToRecord);
-                fileToRecord = mainManager.audio.createNewFile();
+                fileManager.audio.stopPlay();
+                fileManager.audio.removeFile(fileToRecord);
+                fileToRecord = fileManager.audio.createNewFile();
                 timer.cancel();
                 tvTime.setText("0 s");
                 break;
@@ -110,16 +110,16 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPause() {
         super.onPause();
-        if(mainManager.audio.recording) {
-            mainManager.audio.stopRecording();
+        if(fileManager.audio.recording) {
+            fileManager.audio.stopRecording();
             timer.cancel();
         }
         if(fileToRecord.length()==0)
-            mainManager.audio.removeFile(fileToRecord);
+            fileManager.audio.removeFile(fileToRecord);
         else
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
-        mainManager.audio.recording=false;
-        mainManager.audio.playing=false;
+        fileManager.audio.recording=false;
+        fileManager.audio.playing=false;
 
     }
     private class MyTimerTask extends TimerTask{

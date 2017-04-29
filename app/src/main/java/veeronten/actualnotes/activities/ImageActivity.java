@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
-import veeronten.actualnotes.managers.MainManager;
+import veeronten.actualnotes.managers.FileManager;
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
-    MainManager mainManager;
+    FileManager fileManager;
     SurfaceView surfaceView;
     ViewGroup vg;
     Camera camera;
@@ -44,9 +44,9 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
-        if(MainManager.getInstance()==null)
-            new MainManager(getApplicationContext());
-        mainManager = mainManager.getInstance();
+        if(FileManager.getInstance()==null)
+            new FileManager(getApplicationContext());
+        fileManager = fileManager.getInstance();
 
         vg=(ViewGroup)findViewById(R.id.activity_image);
             vg.setOnClickListener(this);
@@ -139,7 +139,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.btnOk:
                 try {
-                    File big = mainManager.image.createNewImageFile();
+                    File big = fileManager.image.createNewImageFile();
 
                     FileOutputStream fileOutputStream = new FileOutputStream(big);
                     BitmapMain.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
@@ -147,7 +147,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                    mainManager.image.createNewMini(big);
+                    fileManager.image.createNewMini(big);
                     Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
                     finish();
                 } catch (IOException e) {
