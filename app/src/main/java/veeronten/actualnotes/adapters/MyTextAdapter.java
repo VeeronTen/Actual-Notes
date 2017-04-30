@@ -12,6 +12,7 @@ import java.util.List;
 
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyTextManager;
 
 public class MyTextAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
@@ -30,7 +31,7 @@ public class MyTextAdapter extends ArrayAdapter<File> {
             v=li.inflate(R.layout.item_text, null);
         }
         TextView tv = (TextView)v.findViewById(R.id.textView);
-        tv.setText(fileManager.text.readFile(getItem(pos)));
+        tv.setText(MyTextManager.readFile(getItem(pos)));
 
         TextView tv2 = (TextView)v.findViewById(R.id.textView2);
         tv2.setText(fileManager.ageOf(getItem(pos)));

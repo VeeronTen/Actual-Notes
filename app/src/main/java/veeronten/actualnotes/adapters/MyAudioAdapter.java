@@ -12,6 +12,7 @@ import java.util.List;
 
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyAudioManager;
 
 public class MyAudioAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
@@ -30,7 +31,7 @@ public class MyAudioAdapter extends ArrayAdapter<File> {
             v=li.inflate(R.layout.item_audio, null);
         }
         TextView tv = (TextView)v.findViewById(R.id.textView);
-        tv.setText(fileManager.audio.getDuration(getItem(pos))+" s.");
+        tv.setText(MyAudioManager.getDuration(getItem(pos))+" s.");
 
         TextView tv2 = (TextView)v.findViewById(R.id.textView2);
         tv2.setText(fileManager.ageOf(getItem(pos)));

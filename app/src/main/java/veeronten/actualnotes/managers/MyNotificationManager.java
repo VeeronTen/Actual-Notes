@@ -31,18 +31,18 @@ import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class MyNotificationManager {
-    AlarmManager am;
-    NotificationManager nm;
+    private static AlarmManager am;
+    private static NotificationManager nm;
 
-    Context context;
+    private static Context context;
 
-    public MyNotificationManager(Context context){
-        this.context = context;
+    static{
+        context = FileManager.getContext();
         am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
     }
 
-    public void registerNewNotification(String action){
+    public static void registerNewNotification(String action){
         Calendar cal = new GregorianCalendar();
         cal.set(Calendar.HOUR_OF_DAY, MyTimeFormat.getHoursFromString(action));
         cal.set(Calendar.MINUTE, MyTimeFormat.getMinutesFromString(action));
@@ -55,12 +55,12 @@ public class MyNotificationManager {
 
         L.i(action+" was registered on "+(cal.getTimeInMillis()>System.currentTimeMillis()?"this day":"the next day"));
     }
-    public void cancelNotification(String action){
+    public static void cancelNotification(String action){
         am.cancel(createPendingIntentWithAction(action));
         L.i(action+" was canceled");
     }
 
-    public void saveNotifications(ArrayList<String> notifications){
+    public static void saveNotifications(ArrayList<String> notifications){
         JSONObject mainObj = new JSONObject();
         JSONArray arrayForList = new JSONArray();
 
@@ -78,7 +78,7 @@ public class MyNotificationManager {
 
         L.i("Notifications were saved.\n\tNow they are "+mainObj.toString());
     }
-    public ArrayList<String> downloadNotifications(){
+    public static ArrayList<String> downloadNotifications(){
         JSONObject mainObj;
         JSONArray arrayForList;
         ArrayList<String> answer = new ArrayList<>();
@@ -101,7 +101,7 @@ public class MyNotificationManager {
         return answer;
     }
 
-    public void sendUsualNotification(int count){
+    public static void sendUsualNotification(int count){
         L.d("ВОТ Я ВНУТРИ");
         if(count==0)
             return;
@@ -126,7 +126,7 @@ public class MyNotificationManager {
         nm.notify(1, notification);
         L.d("ПОСЛАНО");
     }
-    public void sendFastAccessNotification(){
+    public static void sendFastAccessNotification(){
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         // Намерение для запуска второй активности
         Intent imageIntent = new Intent(context, ImageActivity.class);
@@ -154,7 +154,7 @@ public class MyNotificationManager {
     }
 
 
-    private PendingIntent createPendingIntentWithAction(String action){
+    private static PendingIntent createPendingIntentWithAction(String action){
         Intent intent = new Intent(context, MyBroadcastReceiver.class);
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, 0);

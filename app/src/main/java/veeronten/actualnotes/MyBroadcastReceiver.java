@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyNotificationManager;
 
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
@@ -19,11 +20,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             L.i("Soft was restarted");
-            fileManager.notification.sendFastAccessNotification();
-            fileManager.notification.downloadNotifications();
+            MyNotificationManager.sendFastAccessNotification();
+            MyNotificationManager.downloadNotifications();
             return;
         }
         L.i("Signal was received");
-        fileManager.notification.sendUsualNotification(fileManager.countOfFiles());
+        MyNotificationManager.sendUsualNotification(fileManager.countOfFiles());
     }
 }

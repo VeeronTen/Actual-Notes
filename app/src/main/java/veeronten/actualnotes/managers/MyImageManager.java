@@ -1,57 +1,23 @@
 package veeronten.actualnotes.managers;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import veeronten.actualnotes.L;
 
-public class MyImageManager {
-    private Context context;
-    private File imageRoot;
-    private File mimiRoot;
+import static veeronten.actualnotes.managers.FileManager.FileType.image;
+import static veeronten.actualnotes.managers.FileManager.imageRoot;
 
-    public MyImageManager(Context c){
-        context = c;
-        imageRoot = new File(context.getFilesDir(), "image");
-        imageRoot.mkdirs();
-        mimiRoot = new File(context.getFilesDir(), "mimi");
-        mimiRoot.mkdirs();
-    }
-    public File createNewImageFile(){
-        Calendar cal = new GregorianCalendar();
-        String newName = cal.get(Calendar.YEAR)+"-"+
-                cal.get(Calendar.MONTH)+"-"+
-                cal.get(Calendar.DATE)+":"+
-                cal.get(Calendar.HOUR_OF_DAY)+"-"+
-                cal.get(Calendar.MINUTE)+"-"+
-                cal.get(Calendar.SECOND)+"-i";
-        try {
+public class MyImageManager{
 
-            File answer = new File(imageRoot, newName);
-            answer.createNewFile();
-            return answer;
-        } catch (IOException e) {
-            L.d("cant create new file");
-            return null;
-        }
-    }
-    public void removeImageFile(File fileToRemove){
-        fileToRemove.delete();
-        String name = fileToRemove.getName();
-    }
-
-    public File createNewMini(File dad){
+    public static void matchMini(File dad){
         try{
-            File mini = new File(mimiRoot,dad.getName());
-            mini.createNewFile();
+            File mini = new File(FileManager.miniRoot, dad.getName());
 
             Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
             FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
@@ -59,35 +25,38 @@ public class MyImageManager {
 
             fileOutputStreamM.flush();
             fileOutputStreamM.close();
-
-            return mini;
-        } catch (Exception e) {
-            L.d("cant create new file");
-            return null;
+        }catch (FileNotFoundException e) {
+            L.printStackTrace(e);
+        } catch (IOException e) {
+            L.printStackTrace(e);
         }
     }
-    public void removeMini(File fileToRemove){
-        fileToRemove.delete();
-        removeImageFile(new File(imageRoot, fileToRemove.getName()));
-    }
 
-    public ArrayList<File> getMinis(){
-        ArrayList<File> answer = new ArrayList<>();
-        for(File f : mimiRoot.listFiles())
-            answer.add(f);
-        return  answer;
-    }
-
-    public int countOfFiles(){
-        return mimiRoot.listFiles().length;
-    }
-
-
-    public File getBig(String name){
+    public static File getBig(String name){
         return new File(imageRoot, name);
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
+    public static Boolean savePhoto(Bitmap bitmapMain){
+        try {
+
+            File big = FileManager.createNewFile(image);
+
+            FileOutputStream fileOutputStream = new FileOutputStream(big);
+            bitmapMain.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+
+
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            MyImageManager.matchMini(big);
+
+            return true;
+        } catch (IOException e) {
+            L.printStackTrace(e);
+            return false;
+        }
+    }
+
+    private static Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
         // Читаем с inJustDecodeBounds=true для определения размеров
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -101,7 +70,6 @@ public class MyImageManager {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
     }
-
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Реальные размеры изображения
@@ -124,4 +92,5 @@ public class MyImageManager {
 
         return inSampleSize;
     }
+
 }

@@ -15,6 +15,8 @@ import java.util.List;
 
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyAudioManager;
+import veeronten.actualnotes.managers.MyTextManager;
 
 public class MyCommonAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
@@ -46,7 +48,7 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
             case 'a':
                 v = li.inflate(R.layout.item_audio, null);
                 tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(fileManager.audio.getDuration(getItem(pos)) + " s.");
+                tv.setText(MyAudioManager.getDuration(getItem(pos)) + " s.");
 
                 tv2 = (TextView) v.findViewById(R.id.textView2);
                 tv2.setText(fileManager.ageOf(getItem(pos)));
@@ -54,7 +56,7 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
             case 't':
                 v = li.inflate(R.layout.item_text, null);
                 tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(fileManager.text.readFile(getItem(pos)));
+                tv.setText(MyTextManager.readFile(getItem(pos)));
 
                 tv2 = (TextView) v.findViewById(R.id.textView2);
                 tv2.setText(fileManager.ageOf(getItem(pos)));

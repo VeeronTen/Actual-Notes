@@ -12,6 +12,9 @@ import java.io.File;
 
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyTextManager;
+
+import static veeronten.actualnotes.managers.FileManager.FileType.text;
 
 
 public class TextEditActivity extends AppCompatActivity{
@@ -49,14 +52,14 @@ public class TextEditActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.item_save) {
-            fileManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
+            MyTextManager.saveChanges(fileToEdit, textEditor.getText().toString());
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
         }else if(item.getItemId()==R.id.item_close) {
             saveWhenClosing=false;
             finish();
         }else if(item.getItemId()==R.id.item_delete){
             saveWhenClosing=false;
-            fileManager.text.removeFile(fileToEdit);
+            fileManager.removeFile(fileToEdit);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -66,9 +69,9 @@ public class TextEditActivity extends AppCompatActivity{
         super.onPause();
         if(saveWhenClosing) {
             if(textEditor.getText().toString().equals(""))
-                fileManager.text.removeFile(fileToEdit);
+                fileManager.removeFile(fileToEdit);
             else {
-                fileManager.text.saveChanges(fileToEdit, textEditor.getText().toString());
+                MyTextManager.saveChanges(fileToEdit, textEditor.getText().toString());
                 Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
             }
         }
@@ -82,17 +85,17 @@ public class TextEditActivity extends AppCompatActivity{
         answer= intent.getStringExtra(Intent.EXTRA_TEXT);
 
         if(answer!=null){
-            fileToEdit = fileManager.text.createNewFile();
+            fileToEdit = fileManager.createNewFile(text);
             return answer;
         }
 
 
         path = intent.getStringExtra("path");
         if(path == null)
-            fileToEdit = fileManager.text.createNewFile();
+            fileToEdit = fileManager.createNewFile(text);
         else
             fileToEdit = new File(path);
-        answer = fileManager.text.readFile(fileToEdit);
+        answer = MyTextManager.readFile(fileToEdit);
         return  answer;
     }
 }

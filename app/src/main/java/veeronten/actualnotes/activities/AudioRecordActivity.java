@@ -16,6 +16,9 @@ import java.util.TimerTask;
 
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyAudioManager;
+
+import static veeronten.actualnotes.managers.FileManager.FileType.audio;
 
 
 public class AudioRecordActivity extends AppCompatActivity implements View.OnClickListener{
@@ -54,23 +57,23 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave.setVisibility(View.INVISIBLE);
 
         tvTime = (TextView) findViewById(R.id.tvTime);
-        fileToRecord = fileManager.audio.createNewFile();
+        fileToRecord = fileManager.createNewFile(audio);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activity_audiorecord:
-                if(fileManager.audio.recording){
+                if(MyAudioManager.recording){
                     timer.cancel();
                     try {
-                        fileManager.audio.stopRecording();
+                        MyAudioManager.stopRecording();
                     }catch (RuntimeException e){
                         fileToRecord.delete();
                         recreate();
                     }
                     microImage.setColorFilter(getResources().getColor(R.color.microOff));
-                    fileManager.audio.recording=false;
+                    MyAudioManager.recording=false;
                     btnPlay.setVisibility(View.VISIBLE);
                     btnCancel.setVisibility(View.VISIBLE);
                     btnSave.setVisibility(View.VISIBLE);
@@ -79,25 +82,25 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                     btnCancel.setVisibility(View.INVISIBLE);
                     btnSave.setVisibility(View.INVISIBLE);
                     tvTime.setText("0 s");
-                    microImage.setColorFilter(getResources().getColor(R.color.microOn));                    fileManager.audio.stopPlay();
-                    fileManager.audio.startRecording(fileToRecord);
+                    microImage.setColorFilter(getResources().getColor(R.color.microOn));                    MyAudioManager.stopPlay();
+                    MyAudioManager.startRecording(fileToRecord);
 
                     timer = new Timer();
                     timer.schedule(new MyTimerTask(), 0, 1000);
 
-                    fileManager.audio.recording=true;
+                    MyAudioManager.recording=true;
                 }
                 break;
             case R.id.btnPlay:
-                fileManager.audio.startPlay(fileToRecord);
+                MyAudioManager.startPlay(fileToRecord);
                 break;
             case R.id.btnCancel:
                 btnPlay.setVisibility(View.INVISIBLE);
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnSave.setVisibility(View.INVISIBLE);
-                fileManager.audio.stopPlay();
-                fileManager.audio.removeFile(fileToRecord);
-                fileToRecord = fileManager.audio.createNewFile();
+                MyAudioManager.stopPlay();
+                fileManager.removeFile(fileToRecord);
+                fileToRecord = fileManager.createNewFile(audio);
                 timer.cancel();
                 tvTime.setText("0 s");
                 break;
@@ -110,16 +113,16 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPause() {
         super.onPause();
-        if(fileManager.audio.recording) {
-            fileManager.audio.stopRecording();
+        if(MyAudioManager.recording) {
+            MyAudioManager.stopRecording();
             timer.cancel();
         }
         if(fileToRecord.length()==0)
-            fileManager.audio.removeFile(fileToRecord);
+            fileManager.removeFile(fileToRecord);
         else
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
-        fileManager.audio.recording=false;
-        fileManager.audio.playing=false;
+        MyAudioManager.recording=false;
+        MyAudioManager.playing=false;
 
     }
     private class MyTimerTask extends TimerTask{

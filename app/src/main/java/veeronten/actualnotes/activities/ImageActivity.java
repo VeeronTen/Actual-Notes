@@ -14,13 +14,10 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyImageManager;
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
     FileManager fileManager;
@@ -138,24 +135,9 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnOk:
-                try {
-                    File big = fileManager.image.createNewImageFile();
-
-                    FileOutputStream fileOutputStream = new FileOutputStream(big);
-                    BitmapMain.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-
-
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    fileManager.image.createNewMini(big);
+                if(MyImageManager.savePhoto(BitmapMain))
                     Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
-                    finish();
-                } catch (IOException e) {
-                    L.printStackTrace(e);
-                }
-
-
-
+                finish();
                 break;
             case R.id.btnAgain:
 

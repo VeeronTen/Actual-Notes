@@ -3,9 +3,6 @@ package veeronten.actualnotes.activities;
 //TODO add a new feature to share the notes from the app
 //TODO use the standart camera instead the custom
 //TODO make more receiveres
-//TODO create typeManager interface, which will be implemented by audio-, video- and text- managers
-//TODO create an ENUM for types of notes
-
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,10 +29,14 @@ import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.adapters.MyImageAdapter;
 import veeronten.actualnotes.adapters.MyTextAdapter;
 import veeronten.actualnotes.managers.FileManager;
+import veeronten.actualnotes.managers.MyAudioManager;
+import veeronten.actualnotes.managers.MyImageManager;
+import veeronten.actualnotes.managers.MyNotificationManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
-
-
+import static veeronten.actualnotes.managers.FileManager.FileType.audio;
+import static veeronten.actualnotes.managers.FileManager.FileType.mini;
+import static veeronten.actualnotes.managers.FileManager.FileType.text;
 
 
 public class ExploreActivity extends AppCompatActivity implements  View.OnClickListener, ListView.OnItemClickListener{
@@ -82,7 +83,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             btnImageMode.setOnClickListener(this);
 
         commonMode();
-        fileManager.notification.sendFastAccessNotification();
+        MyNotificationManager.sendFastAccessNotification();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,10 +106,10 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         switch (fmode) {
             case 'a':
                 item = modeFiles.get(position);
-                if(fileManager.audio.playing)
-                    fileManager.audio.stopPlay();
+                if(MyAudioManager.playing)
+                    MyAudioManager.stopPlay();
                 else
-                    fileManager.audio.startPlay(item);
+                    MyAudioManager.startPlay(item);
                 break;
             case 't':
                 item = modeFiles.get(position);
@@ -117,7 +118,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 startActivity(intent);
                 break;
             case 'i':
-                item = fileManager.image.getBig((modeFiles.get(position)).getName());
+                item = MyImageManager.getBig((modeFiles.get(position)).getName());
                 L.d(item.toString());
                 intent = new Intent(this, LookActivity.class);
                 intent.putExtra("path", item.getAbsolutePath());
@@ -139,15 +140,15 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         switch (fileManager.typeOf(fileToRemove)) {
             case 'a':
                 modeFiles.remove(acmi.position);
-                fileManager.audio.removeFile(fileToRemove);
+                fileManager.removeFile(fileToRemove);
                 break;
             case 't':
                 modeFiles.remove(acmi.position);
-                fileManager.text.removeFile(fileToRemove);
+                fileManager.removeFile(fileToRemove);
                 break;
             case 'i':
                 modeFiles.remove(acmi.position);
-                fileManager.image.removeMini(fileToRemove);
+                fileManager.removeFile(fileToRemove);
                 break;
         }
         currentAdapter.notifyDataSetChanged();
@@ -212,9 +213,9 @@ L.d("KKK");
 
     private void  commonMode(){
         mode = Mode.COMMON;
-        modeFiles = fileManager.text.getFiles();
-        modeFiles.addAll(fileManager.audio.getFiles());
-        modeFiles.addAll(fileManager.image.getMinis());
+        modeFiles = FileManager.getFiles(text);
+        modeFiles.addAll(FileManager.getFiles(audio));
+        modeFiles.addAll(FileManager.getFiles(mini));
 
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this, modeFiles);
@@ -227,7 +228,7 @@ L.d("KKK");
 
 
         mode = Mode.TEXT;
-        modeFiles = fileManager.text.getFiles();
+        modeFiles = FileManager.getFiles(text);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyTextAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
@@ -240,7 +241,7 @@ L.d("KKK");
 
 
         mode = Mode.AUDIO;
-        modeFiles = fileManager.audio.getFiles();
+        modeFiles = FileManager.getFiles(audio);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyAudioAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);
@@ -254,7 +255,7 @@ L.d("KKK");
 
 
         mode = IMAGE;
-        modeFiles = fileManager.image.getMinis();
+        modeFiles = FileManager.getFiles(mini);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyImageAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);
