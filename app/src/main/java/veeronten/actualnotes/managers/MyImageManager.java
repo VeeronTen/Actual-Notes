@@ -15,22 +15,6 @@ import static veeronten.actualnotes.managers.FileManager.imageRoot;
 
 public class MyImageManager{
 
-    public static void matchMini(File dad){
-        File mini = new File(FileManager.miniRoot, dad.getName());
-        try{
-            Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
-            FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
-            bitMini.compress(Bitmap.CompressFormat.JPEG,100, fileOutputStreamM);
-
-            fileOutputStreamM.flush();
-            fileOutputStreamM.close();
-        } catch (FileNotFoundException e) {
-            L.e("Cant found the file "+mini.toString(),e);
-        } catch (IOException e) {
-            L.e("IO exception with "+ mini.toString(),e);
-        }
-    }
-
     public static File getBig(String name){
         return new File(imageRoot, name);
     }
@@ -50,6 +34,22 @@ public class MyImageManager{
         } catch (IOException e) {
             L.e("IO exception with "+ big.toString(),e);
             return false;
+        }
+    }
+
+    private static void matchMini(File dad){
+        File mini = new File(FileManager.miniRoot, dad.getName());
+        try{
+            Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
+            FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
+            bitMini.compress(Bitmap.CompressFormat.JPEG,100, fileOutputStreamM);
+
+            fileOutputStreamM.flush();
+            fileOutputStreamM.close();
+        } catch (FileNotFoundException e) {
+            L.e("Cant found the file "+mini.toString(),e);
+        } catch (IOException e) {
+            L.e("IO exception with "+ mini.toString(),e);
         }
     }
 

@@ -62,9 +62,15 @@ public class FileManager {
         }
     }
     public static void removeFile(File fileToRemove){
-        if(FileManager.typeOf(fileToRemove)==FileType.IMAGE)
+        if(FileManager.typeOf(fileToRemove)==FileType.IMAGE) {
             new File(imageRoot, fileToRemove.getName()).delete();
-        fileToRemove.delete();
+            new File(miniRoot, fileToRemove.getName()).delete();
+            L.i(new File(imageRoot, fileToRemove.getName())+" was deleted");
+            L.i(new File(miniRoot, fileToRemove.getName())+" was deleted");
+        }else {
+            fileToRemove.delete();
+            L.i(fileToRemove+" was deleted");
+        }
         return;
     }
 

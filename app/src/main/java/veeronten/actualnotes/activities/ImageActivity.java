@@ -1,174 +1,52 @@
 package veeronten.actualnotes.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
-import veeronten.actualnotes.L;
-import veeronten.actualnotes.R;
+import java.io.File;
+
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyImageManager;
 
-public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
-    FileManager fileManager;
-    SurfaceView surfaceView;
-    ViewGroup vg;
-    Camera camera;
-    //Boolean meteringAreaSupported;
-    Boolean took;
-    Bitmap BitmapMain;
-    ImageButton btnOk;
-    ImageButton btnAgain;
+public class ImageActivity extends AppCompatActivity{
+    File newImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_image);
 
-        //meteringAreaSupported=false;
-        // если хотим, чтобы приложение было полноэкранным
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        newImg = FileManager.createNewFile(FileManager.FileType.IMAGE);
+        Uri photoURI = FileProvider.getUriForFile(this,
+                "veeronten.actualnotes.fileProvider",
+                newImg);
 
-        if(FileManager.getInstance()==null)
-            new FileManager(getApplicationContext());
-        fileManager = fileManager.getInstance();
-
-        vg=(ViewGroup)findViewById(R.id.activity_image);
-            vg.setOnClickListener(this);
-
-        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-
-        btnOk = (ImageButton)findViewById(R.id.btnOk);
-            btnOk.setVisibility(View.INVISIBLE);
-            btnOk.setOnClickListener(this);
-        btnAgain = (ImageButton)findViewById(R.id.btnAgain);
-            btnAgain.setVisibility(View.INVISIBLE);
-            btnAgain.setOnClickListener(this);
-
-        took=false;
-
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                try {
-                    Camera.Parameters params = camera.getParameters();
-                    params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                    camera.setParameters(params);
-                    camera.setPreviewDisplay(holder);
-                    camera.setDisplayOrientation(90);
-                    Camera.Size previewSize = camera.getParameters().getPreviewSize();
-//
-                    ViewGroup.LayoutParams lp = surfaceView.getLayoutParams();
-                    L.d("camH " + previewSize.height);
-                    L.d("camW " + previewSize.width);
-                    L.d("surH " + surfaceView.getHeight());
-                    L.d("surW " + surfaceView.getWidth());
-
-                    int camH = previewSize.width;
-                    int camW = previewSize.height;
-//
-                    int dif = surfaceView.getWidth() - camW;
-                    float coaf = (float) dif / (float) camW;
-
-                    L.d(coaf + "");
-//                    // здесь корректируем размер отображаемого preview, чтобы не было искажений
-//
-
-                    // портретный вид
-
-                    lp.height = previewSize.width + dif;
-                    lp.width = (int) (previewSize.height * (1 + coaf));
-                    // (int) (previewSurfaceHeight / aspect);
-
-//
-                    surfaceView.setLayoutParams(lp);
-
-
-                    camera.startPreview();
-                } catch (Exception e) {
-                    L.printStackTrace(e);
-                }
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format,
-                                       int width, int height) {
-                Camera.Parameters p = camera.getParameters();
-//                if (p.getMaxNumMeteringAreas() > 0) {
-//                    meteringAreaSupported = true;
-//                }
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-            }
-        });
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(takePictureIntent, 1);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        camera = Camera.open();
-    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(newImg.toString(), options);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (camera != null)
-            camera.release();
-        camera = null;
-    }
+            Matrix matrix = new Matrix();
+            matrix.postRotate(270);
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnOk:
-                if(MyImageManager.savePhoto(BitmapMain))
-                    Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
-                finish();
-                break;
-            case R.id.btnAgain:
-
-                recreate();
-                break;
-            case R.id.activity_image:
-                if(took)
-                    break;
-                took=true;
-                camera.takePicture(null, null, new Camera.PictureCallback() {
-                    @Override
-                    public void onPictureTaken(byte[] data, Camera camera) {
-                        try {
-                            Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                            Matrix matrix = new Matrix();
-                            matrix.postRotate(90);
-
-                            BitmapMain = Bitmap.createBitmap(originBitmap , 0, 0, originBitmap .getWidth(), originBitmap .getHeight(), matrix, true);
-
-                            btnOk.setVisibility(View.VISIBLE);
-                            btnAgain.setVisibility(View.VISIBLE);
-                        } catch (Exception e) {
-                            L.d("omg", e);
-                        }
-                    }
-                });
-
-                break;
+            bitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap .getWidth(), bitmap .getHeight(), matrix, true);
+            MyImageManager.savePhoto(bitmap);
         }
-
+        FileManager.removeFile(newImg);
+        finish();
     }
 
 }

@@ -1,8 +1,9 @@
 package veeronten.actualnotes.activities;
 
 //TODO add a new feature to share the notes from the app
-//TODO use the standart camera instead the custom
+//TODO async to save photo
 //TODO make more receiveres
+//TODO close fastaccess notif
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,8 +61,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         if(FileManager.getInstance()==null)
             new FileManager(getApplicationContext());
         fileManager = fileManager.getInstance();
-
-        //cache = new BitmapCache(imageManager);
 
         layout = (ViewGroup) findViewById(R.id.activity_explore);
 
@@ -132,20 +131,8 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         File fileToRemove = modeFiles.get(acmi.position);
 
-        switch (FileManager.typeOf(fileToRemove)) {
-            case AUDIO:
-                modeFiles.remove(acmi.position);
-                FileManager.removeFile(fileToRemove);
-                break;
-            case TEXT:
-                modeFiles.remove(acmi.position);
-                FileManager.removeFile(fileToRemove);
-                break;
-            case IMAGE:
-                modeFiles.remove(acmi.position);
-                FileManager.removeFile(fileToRemove);
-                break;
-        }
+        modeFiles.remove(acmi.position);
+        FileManager.removeFile(fileToRemove);
         currentAdapter.notifyDataSetChanged();
 
         return true;
@@ -184,7 +171,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     @Override
     public void onResume(){
         super.onResume();
-L.d("KKK");
         if(mode!=null)
             switch (mode) {
                 case COMMON:
