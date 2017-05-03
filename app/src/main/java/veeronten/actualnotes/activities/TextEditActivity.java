@@ -14,7 +14,7 @@ import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyTextManager;
 
-import static veeronten.actualnotes.managers.FileManager.FileType.text;
+import static veeronten.actualnotes.managers.FileManager.FileType.TEXT;
 
 
 public class TextEditActivity extends AppCompatActivity{
@@ -85,14 +85,14 @@ public class TextEditActivity extends AppCompatActivity{
         answer= intent.getStringExtra(Intent.EXTRA_TEXT);
 
         if(answer!=null){
-            fileToEdit = fileManager.createNewFile(text);
+            fileToEdit = fileManager.createNewFile(TEXT);
             return answer;
         }
 
 
         path = intent.getStringExtra("path");
         if(path == null)
-            fileToEdit = fileManager.createNewFile(text);
+            fileToEdit = fileManager.createNewFile(TEXT);
         else
             fileToEdit = new File(path);
         answer = MyTextManager.readFile(fileToEdit);

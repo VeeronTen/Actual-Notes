@@ -6,6 +6,7 @@ import android.media.MediaRecorder;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import veeronten.actualnotes.L;
@@ -38,8 +39,10 @@ public class MyAudioManager {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.prepare();
                 answer = mediaPlayer.getDuration()/1000;
-            } catch (Exception e) {
-                L.d("b",e);
+            } catch (FileNotFoundException e) {
+                L.e("Cant found the file "+f.toString(),e);
+            } catch (IOException e) {
+                L.e("IO exception with "+f.toString(),e);
             }
 
         return  answer;
@@ -60,7 +63,7 @@ public class MyAudioManager {
             mediaRecorder.start();
             recording=true;
         } catch (IOException e) {
-            L.d("be da", e);
+            L.e("Cant prepare mediaRecorder",e);
         }
 
     }
@@ -86,8 +89,10 @@ public class MyAudioManager {
             mediaPlayer.prepare();
             mediaPlayer.start();
             playing = true;
-        } catch (Exception e) {
-            L.d("b",e);
+        } catch (FileNotFoundException e) {
+            L.e("Cant found the file "+file.toString(),e);
+        } catch (IOException e) {
+            L.e("Cant prepare mediaPlayer",e);
         }
     }
     public static void stopPlay() {

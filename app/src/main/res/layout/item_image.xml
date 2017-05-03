@@ -10,7 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/font">
 
         <ImageView
@@ -21,10 +21,12 @@
             android:layout_weight="1" />
 
         <TextView
-            android:textColor="@color/textColor"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:layout_weight="1" />
+
+
+            android:layout_gravity="bottom|right"
+            android:textColor="@color/textColor" />
     </LinearLayout>
 </LinearLayout>

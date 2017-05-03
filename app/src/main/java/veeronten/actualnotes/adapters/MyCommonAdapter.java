@@ -20,11 +20,9 @@ import veeronten.actualnotes.managers.MyTextManager;
 
 public class MyCommonAdapter extends ArrayAdapter<File> {
     LayoutInflater li;
-    FileManager fileManager;
 
     public MyCommonAdapter(Context context, List<File> objects) {
         super(context, R.layout.item_image, objects);
-        fileManager = fileManager.getInstance();
     }
 
     @Override
@@ -35,33 +33,26 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
 
 
         li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        switch (fileManager.typeOf(getItem(pos))) {
-            case 'i':
+        switch (FileManager.typeOf(getItem(pos))) {
+            case IMAGE:
                 v = li.inflate(R.layout.item_image, null);
-                tv = (TextView) v.findViewById(R.id.textView);
-                tv.setText(fileManager.ageOf(getItem(pos)));
-
                 Bitmap bitmap = BitmapFactory.decodeFile(getItem(pos).getAbsolutePath());
                 ImageView iv = (ImageView) v.findViewById(R.id.imageView);
                 iv.setImageBitmap(bitmap);
                 break;
-            case 'a':
+            case AUDIO:
                 v = li.inflate(R.layout.item_audio, null);
                 tv = (TextView) v.findViewById(R.id.textView);
                 tv.setText(MyAudioManager.getDuration(getItem(pos)) + " s.");
-
-                tv2 = (TextView) v.findViewById(R.id.textView2);
-                tv2.setText(fileManager.ageOf(getItem(pos)));
                 break;
-            case 't':
+            case TEXT:
                 v = li.inflate(R.layout.item_text, null);
                 tv = (TextView) v.findViewById(R.id.textView);
                 tv.setText(MyTextManager.readFile(getItem(pos)));
-
-                tv2 = (TextView) v.findViewById(R.id.textView2);
-                tv2.setText(fileManager.ageOf(getItem(pos)));
                 break;
         }
+        tv2 = (TextView) v.findViewById(R.id.textView2);
+        tv2.setText(FileManager.ageOf(getItem(pos)));
         return v;
     }
 }

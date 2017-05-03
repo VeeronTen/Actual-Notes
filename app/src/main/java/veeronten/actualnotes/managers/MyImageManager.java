@@ -10,25 +10,24 @@ import java.io.IOException;
 
 import veeronten.actualnotes.L;
 
-import static veeronten.actualnotes.managers.FileManager.FileType.image;
+import static veeronten.actualnotes.managers.FileManager.FileType.IMAGE;
 import static veeronten.actualnotes.managers.FileManager.imageRoot;
 
 public class MyImageManager{
 
     public static void matchMini(File dad){
+        File mini = new File(FileManager.miniRoot, dad.getName());
         try{
-            File mini = new File(FileManager.miniRoot, dad.getName());
-
             Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
             FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
             bitMini.compress(Bitmap.CompressFormat.JPEG,100, fileOutputStreamM);
 
             fileOutputStreamM.flush();
             fileOutputStreamM.close();
-        }catch (FileNotFoundException e) {
-            L.printStackTrace(e);
+        } catch (FileNotFoundException e) {
+            L.e("Cant found the file "+mini.toString(),e);
         } catch (IOException e) {
-            L.printStackTrace(e);
+            L.e("IO exception with "+ mini.toString(),e);
         }
     }
 
@@ -37,10 +36,8 @@ public class MyImageManager{
     }
 
     public static Boolean savePhoto(Bitmap bitmapMain){
+        File big = FileManager.createNewFile(IMAGE);
         try {
-
-            File big = FileManager.createNewFile(image);
-
             FileOutputStream fileOutputStream = new FileOutputStream(big);
             bitmapMain.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
 
@@ -51,7 +48,7 @@ public class MyImageManager{
 
             return true;
         } catch (IOException e) {
-            L.printStackTrace(e);
+            L.e("IO exception with "+ big.toString(),e);
             return false;
         }
     }

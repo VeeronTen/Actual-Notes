@@ -18,7 +18,7 @@ import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 
-import static veeronten.actualnotes.managers.FileManager.FileType.audio;
+
 
 
 public class AudioRecordActivity extends AppCompatActivity implements View.OnClickListener{
@@ -57,7 +57,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave.setVisibility(View.INVISIBLE);
 
         tvTime = (TextView) findViewById(R.id.tvTime);
-        fileToRecord = fileManager.createNewFile(audio);
+        fileToRecord = fileManager.createNewFile(FileManager.FileType.AUDIO);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                 btnSave.setVisibility(View.INVISIBLE);
                 MyAudioManager.stopPlay();
                 fileManager.removeFile(fileToRecord);
-                fileToRecord = fileManager.createNewFile(audio);
+                fileToRecord = fileManager.createNewFile(FileManager.FileType.AUDIO);
                 timer.cancel();
                 tvTime.setText("0 s");
                 break;

@@ -13,7 +13,7 @@ import veeronten.actualnotes.L;
 public class FileManager {
     public static FileManager instance;
 
-    public enum FileType{text, image, audio, mini}
+    public enum FileType{TEXT, IMAGE, AUDIO, MINI}
 
     static File textRoot;
     static File audioRoot;
@@ -29,8 +29,7 @@ public class FileManager {
         textRoot.mkdirs();
         imageRoot = new File(context.getFilesDir(), "image");
         imageRoot.mkdirs();
-        //TODO mini
-        miniRoot = new File(context.getFilesDir(), "mimi");
+        miniRoot = new File(context.getFilesDir(), "mini");
         miniRoot.mkdirs();
         audioRoot = new File(context.getFilesDir(), "audio");
         audioRoot.mkdirs();
@@ -51,19 +50,19 @@ public class FileManager {
         try {
             newFile.createNewFile();
             L.i(newFile.toString()+" was created");
-            if(fileType==FileType.image){
+            if(fileType==FileType.IMAGE){
                 File mini = new File(miniRoot,newFile.getName());
                 mini.createNewFile();
                 L.i(mini.toString()+" was created");
             }
             return newFile;
         } catch (IOException e) {
-            L.d("cant create a new file "+newFile.toString(), e);
+            L.e("cant create a new file "+newFile.toString(), e);
             return null;
         }
     }
     public static void removeFile(File fileToRemove){
-        if(FileManager.typeOf(fileToRemove)=='i')
+        if(FileManager.typeOf(fileToRemove)==FileType.IMAGE)
             new File(imageRoot, fileToRemove.getName()).delete();
         fileToRemove.delete();
         return;
@@ -72,9 +71,9 @@ public class FileManager {
     public ArrayList<File> getFiles(){
         ArrayList<File> answer = new ArrayList<>();
 
-        answer.addAll(getFiles(FileType.text));
-        answer.addAll(getFiles(FileType.audio));
-        answer.addAll(getFiles(FileType.image));
+        answer.addAll(getFiles(FileType.TEXT));
+        answer.addAll(getFiles(FileType.AUDIO));
+        answer.addAll(getFiles(FileType.IMAGE));
         return answer;
     }
     public static ArrayList<File> getFiles(FileType fileType){
@@ -85,7 +84,7 @@ public class FileManager {
     }
 
     public static int countOfFiles(){
-        return countOfFiles(FileType.text)+countOfFiles(FileType.audio)+countOfFiles(FileType.image);
+        return countOfFiles(FileType.TEXT)+countOfFiles(FileType.AUDIO)+countOfFiles(FileType.IMAGE);
     }
     public static int countOfFiles(FileType fileType){
         return getRootByType(fileType).listFiles().length;
@@ -111,17 +110,17 @@ public class FileManager {
             answer=count+" hours";
         return answer;
     }
-    public static char typeOf(File f){
+    public static FileType typeOf(File f){
         String[] mas = f.getName().split("-");
         switch (mas[5]){
             case "t":
-                return 't';
+                return FileType.TEXT;
             case "i":
-                return 'i';
+                return FileType.IMAGE;
             case "a":
-                return 'a';
+                return FileType.AUDIO;
         }
-        return '0';
+        return null;
     }
 
     public static String generateFilenamePrefix(){
@@ -138,16 +137,16 @@ public class FileManager {
     private static File getRootByType(FileType fileType){
         File root=null;
         switch (fileType){
-            case text:
+            case TEXT:
                 root=textRoot;
                 break;
-            case audio:
+            case AUDIO:
                 root=audioRoot;
                 break;
-            case image:
+            case IMAGE:
                 root=imageRoot;
                 break;
-            case mini:
+            case MINI:
                 root=miniRoot;
                 break;
         }
@@ -156,13 +155,13 @@ public class FileManager {
     private static char getPostfixByType(FileType fileType){
         char postfix='_';
         switch (fileType){
-            case text:
+            case TEXT:
                 postfix='t';
                 break;
-            case image:case mini:
+            case IMAGE:case MINI:
                 postfix='i';
                 break;
-            case audio:
+            case AUDIO:
                 postfix='a';
                 break;
         }

@@ -21,11 +21,10 @@ public class MyTextManager {
             while((s=br.readLine())!=null)
                 sb.append(s+"\n");
         } catch (FileNotFoundException e) {
-            L.d("fnf");
+            L.e("Cant found the file "+file.toString(),e);
         } catch (IOException e) {
-            L.d("io");
+            L.e("IO exception with "+file.toString(),e);
         }
-        L.d(sb.toString());
         return sb.toString();
     }
     public static void saveChanges(File file, String text){
@@ -34,9 +33,9 @@ public class MyTextManager {
             bw.write(text);
             bw.flush();
         } catch (FileNotFoundException e) {
-            L.d("fexp");
+            L.e("Cant found the file "+file.toString(),e);
         } catch (IOException e) {
-            L.d("io");
+            L.e("IO exception with "+file.toString(),e);
         }
     }
 }

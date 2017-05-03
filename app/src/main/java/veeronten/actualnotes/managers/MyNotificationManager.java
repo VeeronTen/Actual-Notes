@@ -52,12 +52,9 @@ public class MyNotificationManager {
             cal.add(Calendar.DATE,1);
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, createPendingIntentWithAction(action));
-
-        L.i(action+" was registered on "+(cal.getTimeInMillis()>System.currentTimeMillis()?"this day":"the next day"));
     }
     public static void cancelNotification(String action){
         am.cancel(createPendingIntentWithAction(action));
-        L.i(action+" was canceled");
     }
 
     public static void saveNotifications(ArrayList<String> notifications){
@@ -75,8 +72,6 @@ public class MyNotificationManager {
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("notifyList", mainObj.toString());
         ed.apply();
-
-        L.i("Notifications were saved.\n\tNow they are "+mainObj.toString());
     }
     public static ArrayList<String> downloadNotifications(){
         JSONObject mainObj;
@@ -93,16 +88,14 @@ public class MyNotificationManager {
                 registerNewNotification(actionToRegister);
                 answer.add(arrayForList.getString(i));
             }
-            L.i("All notifications were downloaded");
         } catch (JSONException e) {
-            L.w("JSON parse fails. JSON is not exist maybe");
+            L.e("JSON parse fails. JSON is not exist maybe");
             return answer;
         }
         return answer;
     }
 
     public static void sendUsualNotification(int count){
-        L.d("ВОТ Я ВНУТРИ");
         if(count==0)
             return;
         Notification.Builder builder = new Notification.Builder(context);
@@ -124,7 +117,6 @@ public class MyNotificationManager {
         Notification notification = builder.getNotification();
         //notification.flags |= Notification.FLAG_INSISTENT;
         nm.notify(1, notification);
-        L.d("ПОСЛАНО");
     }
     public static void sendFastAccessNotification(){
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
