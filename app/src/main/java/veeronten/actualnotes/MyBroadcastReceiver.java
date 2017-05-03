@@ -9,22 +9,21 @@ import veeronten.actualnotes.managers.MyNotificationManager;
 
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
-    FileManager fileManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        L.d("ПРИНЯТО");
+        L.i("Signal was received");
+
         if(FileManager.getInstance()==null)
             new FileManager(context);
-        fileManager = FileManager.getInstance();
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-            L.i("Soft was restarted");
+            L.i("That was a BOOT signal");
             MyNotificationManager.sendFastAccessNotification();
             MyNotificationManager.downloadNotifications();
             return;
         }
-        L.i("Signal was received");
-        MyNotificationManager.sendUsualNotification(fileManager.countOfFiles());
+
+        MyNotificationManager.sendUsualNotification(FileManager.countOfFiles());
     }
 }

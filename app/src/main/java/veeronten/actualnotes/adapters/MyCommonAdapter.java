@@ -31,7 +31,6 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
         TextView tv;
         TextView tv2;
 
-
         li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         switch (FileManager.typeOf(getItem(pos))) {
             case IMAGE:
@@ -51,6 +50,7 @@ public class MyCommonAdapter extends ArrayAdapter<File> {
                 tv.setText(MyTextManager.readFile(getItem(pos)));
                 break;
         }
+
         tv2 = (TextView) v.findViewById(R.id.textView2);
         tv2.setText(FileManager.ageOf(getItem(pos)));
         return v;

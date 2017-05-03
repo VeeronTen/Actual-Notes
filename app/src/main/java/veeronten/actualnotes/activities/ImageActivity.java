@@ -1,9 +1,6 @@
 package veeronten.actualnotes.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,18 +31,10 @@ public class ImageActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(newImg.toString(), options);
-
-            Matrix matrix = new Matrix();
-            matrix.postRotate(270);
-
-            bitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap .getWidth(), bitmap .getHeight(), matrix, true);
-            MyImageManager.savePhoto(bitmap);
-        }
-        FileManager.removeFile(newImg);
+        if (requestCode == 1 && resultCode == RESULT_OK)
+            MyImageManager.matchMini(newImg);
+        else
+            FileManager.removeFile(newImg);
         finish();
     }
 

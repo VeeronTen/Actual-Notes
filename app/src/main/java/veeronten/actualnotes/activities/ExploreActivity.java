@@ -1,12 +1,11 @@
 package veeronten.actualnotes.activities;
 
-//TODO add a new feature to share the notes from the app
-//TODO async to save photo
-//TODO make more receiveres
 //TODO close fastaccess notif
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -30,6 +29,7 @@ import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 import veeronten.actualnotes.managers.MyImageManager;
 import veeronten.actualnotes.managers.MyNotificationManager;
+import veeronten.actualnotes.managers.MyTextManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
 
@@ -123,18 +123,51 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0,0,0,"Delete");
+        menu.add(0,0,0,"Share");
+        menu.add(0,1,0,"Delete");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        File fileToRemove = modeFiles.get(acmi.position);
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        File chosenFile = modeFiles.get(acmi.position);
 
-        modeFiles.remove(acmi.position);
-        FileManager.removeFile(fileToRemove);
-        currentAdapter.notifyDataSetChanged();
+        if(item.getItemId()==0){
+            //share
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
 
+            switch (FileManager.typeOf(chosenFile)){
+                case TEXT:
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, MyTextManager.readFile(chosenFile));
+                    sendIntent.setType("text/plain");
+                    break;
+                case AUDIO:
+                    Uri audioURI = FileProvider.getUriForFile(this,
+                            "veeronten.actualnotes.fileProvider",
+                            chosenFile);
+                    L.d(audioURI.toString());
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, audioURI);
+                    sendIntent.setType("audio/mp3");
+                    break;
+                case IMAGE:
+                    chosenFile = MyImageManager.getBig(chosenFile.getName());
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "veeronten.actualnotes.fileProvider",
+                            chosenFile);
+                    L.d(photoURI.toString());
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
+                    sendIntent.setType("image/jpeg");
+                    break;
+            }
+
+            startActivity(sendIntent);
+        }else {
+            //delete
+            modeFiles.remove(acmi.position);
+            FileManager.removeFile(chosenFile);
+            currentAdapter.notifyDataSetChanged();
+        }
         return true;
     }
 
@@ -233,16 +266,14 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     }
 ///////////////////////
     private void imageMode(){
-
-
         mode = IMAGE;
         modeFiles = FileManager.getFiles(FileManager.FileType.MINI);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);
-
         resetStyle();
         btnImageMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_image));
+
     }
 
     private ArrayList<File> sort(ArrayList<File> sourse){

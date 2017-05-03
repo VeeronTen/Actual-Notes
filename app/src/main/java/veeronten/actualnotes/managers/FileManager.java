@@ -15,10 +15,10 @@ public class FileManager {
 
     public enum FileType{TEXT, IMAGE, AUDIO, MINI}
 
-    static File textRoot;
-    static File audioRoot;
-    static File imageRoot;
-    static File miniRoot;
+    public static File textRoot;
+    public static File audioRoot;
+    public static File imageRoot;
+    public static File miniRoot;
 
     private static Context context;
 
@@ -121,9 +121,9 @@ public class FileManager {
         switch (mas[5]){
             case "t":
                 return FileType.TEXT;
-            case "i":
+            case "i.jpeg":
                 return FileType.IMAGE;
-            case "a":
+            case "a.mp3":
                 return FileType.AUDIO;
         }
         return null;
@@ -158,17 +158,17 @@ public class FileManager {
         }
         return root;
     }
-    private static char getPostfixByType(FileType fileType){
-        char postfix='_';
+    private static String getPostfixByType(FileType fileType){
+        String postfix=new String();
         switch (fileType){
             case TEXT:
-                postfix='t';
+                postfix="t";
                 break;
             case IMAGE:case MINI:
-                postfix='i';
+                postfix="i.jpeg";
                 break;
             case AUDIO:
-                postfix='a';
+                postfix="a.mp3";
                 break;
         }
         return postfix;

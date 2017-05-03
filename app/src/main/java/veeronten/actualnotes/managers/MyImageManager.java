@@ -37,7 +37,7 @@ public class MyImageManager{
         }
     }
 
-    private static void matchMini(File dad){
+    public static void matchMini(File dad){
         File mini = new File(FileManager.miniRoot, dad.getName());
         try{
             Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
