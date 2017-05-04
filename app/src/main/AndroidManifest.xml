@@ -39,6 +39,7 @@
         <activity android:name=".activities.ImageActivity" />
         <activity android:name=".activities.LookActivity" />
         <activity android:name=".activities.NotifyActivity" />
+        <activity android:name=".activities.SettingsActivity" />
 
         <receiver android:name=".MyBroadcastReceiver">
             <intent-filter>

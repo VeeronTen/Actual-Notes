@@ -95,8 +95,8 @@ public class MyNotificationManager {
         return answer;
     }
 
-    public static void sendUsualNotification(int count){
-        if(count==0)
+    public static void sendUsualNotification(){
+        if(FileManager.countOfFiles()==0)
             return;
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
@@ -109,7 +109,7 @@ public class MyNotificationManager {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 //.setContentTitle(res.getString(R.string.notifytitle)) // Заголовок уведомления
-                .setContentTitle("Notes:"+count)
+                .setContentTitle("Notes:"+FileManager.countOfFiles())
                 //.setContentText(res.getString(R.string.notifytext))
                 .setContentText(""); // Текст уведомления
 
@@ -145,6 +145,20 @@ public class MyNotificationManager {
         nm.notify(0, notification);
     }
 
+    public static void setFastAccessStatus(Boolean value){
+        SharedPreferences sPref = context.getSharedPreferences("fastAccessStatus", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putBoolean("fastAccessStatus", value);
+        if(value)
+            sendFastAccessNotification();
+        else
+            nm.cancel(0);
+        ed.apply();
+    }
+    public static Boolean getFastAccessStatus(){
+        SharedPreferences sPref = context.getSharedPreferences("fastAccessStatus", MODE_PRIVATE);
+        return sPref.getBoolean("fastAccessStatus", true);
+    }
 
     private static PendingIntent createPendingIntentWithAction(String action){
         Intent intent = new Intent(context, MyBroadcastReceiver.class);

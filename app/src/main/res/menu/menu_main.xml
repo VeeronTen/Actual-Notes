@@ -5,8 +5,15 @@
     tools:context=".activities.ExploreActivity">
 
     <item
+        android:id="@+id/notif"
         android:title=""
         android:icon="@drawable/ic_notif"
+        app:showAsAction="always"
+    />
+    <item
+        android:id="@+id/settings"
+        android:title=""
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always"
     />
 

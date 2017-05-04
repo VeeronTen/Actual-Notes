@@ -19,11 +19,12 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             L.i("That was a BOOT signal");
-            MyNotificationManager.sendFastAccessNotification();
+            if(MyNotificationManager.getFastAccessStatus())
+                MyNotificationManager.sendFastAccessNotification();
             MyNotificationManager.downloadNotifications();
             return;
         }
 
-        MyNotificationManager.sendUsualNotification(FileManager.countOfFiles());
+        MyNotificationManager.sendUsualNotification();
     }
 }

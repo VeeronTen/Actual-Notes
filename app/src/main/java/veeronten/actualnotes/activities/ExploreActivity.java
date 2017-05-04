@@ -1,6 +1,6 @@
 package veeronten.actualnotes.activities;
 
-//TODO close fastaccess notif
+//TODO ability to send audio and image info to my app. does no matter
 
 import android.content.Intent;
 import android.net.Uri;
@@ -28,7 +28,6 @@ import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 import veeronten.actualnotes.managers.MyImageManager;
-import veeronten.actualnotes.managers.MyNotificationManager;
 import veeronten.actualnotes.managers.MyTextManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
@@ -77,7 +76,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             btnImageMode.setOnClickListener(this);
 
         commonMode();
-        MyNotificationManager.sendFastAccessNotification();
+        //MyNotificationManager.sendFastAccessNotification();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +85,15 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(this,NotifyActivity.class);
+        Intent intent=null;
+        switch (item.getItemId()){
+            case R.id.settings:
+                intent = new Intent(this,SettingsActivity.class);
+                break;
+            case R.id.notif:
+                intent = new Intent(this,NotifyActivity.class);
+                break;
+        }
         startActivity(intent);
         return super.onOptionsItemSelected(item);
     }

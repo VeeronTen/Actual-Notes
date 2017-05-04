@@ -51,7 +51,6 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             lvNotifications.setOnItemClickListener(this);
             registerForContextMenu(lvNotifications);
             lvNotifications.setAdapter(adapter);
-        L.i("NotifyActivity was created");
     }
     @Override
     public void onClick(View v){
