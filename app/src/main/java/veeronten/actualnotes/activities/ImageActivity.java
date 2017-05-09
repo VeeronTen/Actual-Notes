@@ -31,9 +31,10 @@ public class ImageActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            FileManager.deleteLastFromDCIM();
             MyImageManager.matchMini(newImg);
-        else
+        }else
             FileManager.removeFile(newImg);
         finish();
     }

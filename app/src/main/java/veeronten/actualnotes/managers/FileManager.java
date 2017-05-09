@@ -1,6 +1,12 @@
 package veeronten.actualnotes.managers;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +78,70 @@ public class FileManager {
             L.i(fileToRemove+" was deleted");
         }
         return;
+    }
+
+    public static boolean deleteLastFromDCIM() {
+        boolean success = false;
+        GregorianCalendar now = new GregorianCalendar();
+        try {
+            //Samsungs:
+            File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "DCIM/Camera/");
+            L.d(folder.toString());
+            if(!folder.exists()){ //other phones:
+                File[] subfolders = new File(Environment.getExternalStorageDirectory() + File.separator + "DCIM").listFiles();
+                for(File subfolder : subfolders){
+                    if(subfolder.getAbsolutePath().contains("100")){
+                        folder = subfolder;
+                        break;
+                    }
+                }
+                if(!folder.exists())
+                    return false;
+            }
+
+            File[] images = folder.listFiles();
+            File latestSavedImage = images[0];
+            for (int i = 1; i < images.length; ++i) {
+                if (images[i].lastModified() > latestSavedImage.lastModified()) {
+                    latestSavedImage = images[i];
+                }
+            }
+            long difference=now.getTimeInMillis()-latestSavedImage.lastModified();
+            if(difference<6000&&difference>-1) {
+                //context.getContentResolver().delete(Uri.fromFile(latestSavedImage), null,null);
+                success = latestSavedImage.delete();
+
+//                I've seen a lot of answers suggesting the use of
+//
+//                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" +  Environment.getExternalStorageDirectory())));
+//                This works but causes the Media Scanner to re-scan the media on the device. A more efficient approach would be to query/delete via the Media Store content provider:
+                String[] projection = { MediaStore.Images.Media._ID };
+
+// Match on the file path
+                String selection = MediaStore.Images.Media.DATA + " = ?";
+                String[] selectionArgs = new String[] { latestSavedImage.getAbsolutePath() };
+
+// Query for the ID of the media matching the file path
+                Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                ContentResolver contentResolver = context.getContentResolver();
+                Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+                if (c.moveToFirst()) {
+                    // We found the ID. Deleting the item via the content provider will also remove the file
+                    long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+                    Uri deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    contentResolver.delete(deleteUri, null, null);
+                } else {
+                    // File not found in media store DB
+                }
+                c.close();
+
+            }
+            return success;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return success;
+        }
+
     }
 
     public ArrayList<File> getFiles(){
