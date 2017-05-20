@@ -13,13 +13,11 @@ import veeronten.actualnotes.L;
 
 public class MyAudioManager {
     public static Boolean recording;
-    public static Boolean playing;
     private static MediaRecorder mediaRecorder;
     private static MediaPlayer mediaPlayer;
 
     static {
         recording=false;
-        playing = false;
         mediaRecorder=null;
         mediaPlayer=null;
     }
@@ -88,7 +86,6 @@ public class MyAudioManager {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.prepare();
             mediaPlayer.start();
-            playing = true;
         } catch (FileNotFoundException e) {
             L.e("Cant found the file "+file.toString(),e);
         } catch (IOException e) {
@@ -98,7 +95,9 @@ public class MyAudioManager {
     public static void stopPlay() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
-            playing = false;
         }
+    }
+    public static boolean isPlaying(){
+        return mediaPlayer.isPlaying();
     }
 }

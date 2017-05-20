@@ -92,7 +92,10 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.btnPlay:
-                MyAudioManager.startPlay(fileToRecord);
+                if(MyAudioManager.isPlaying())
+                    MyAudioManager.stopPlay();
+                else
+                    MyAudioManager.startPlay(fileToRecord);
                 break;
             case R.id.btnCancel:
                 btnPlay.setVisibility(View.INVISIBLE);
@@ -122,8 +125,6 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
         else
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
         MyAudioManager.recording=false;
-        MyAudioManager.playing=false;
-
     }
     private class MyTimerTask extends TimerTask{
         int sec=0;

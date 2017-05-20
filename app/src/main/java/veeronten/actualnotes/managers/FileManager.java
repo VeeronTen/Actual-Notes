@@ -56,11 +56,7 @@ public class FileManager {
         try {
             newFile.createNewFile();
             L.i(newFile.toString()+" was created");
-            if(fileType==FileType.IMAGE){
-                File mini = new File(miniRoot,newFile.getName());
-                mini.createNewFile();
-                L.i(mini.toString()+" was created");
-            }
+
             return newFile;
         } catch (IOException e) {
             L.e("cant create a new file "+newFile.toString(), e);

@@ -33,6 +33,7 @@ public class ImageActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             FileManager.deleteLastFromDCIM();
+            MyImageManager.rotateImage(newImg);
             MyImageManager.matchMini(newImg);
         }else
             FileManager.removeFile(newImg);

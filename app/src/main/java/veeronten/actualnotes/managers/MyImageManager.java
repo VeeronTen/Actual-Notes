@@ -2,6 +2,8 @@ package veeronten.actualnotes.managers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +14,7 @@ import veeronten.actualnotes.L;
 
 import static veeronten.actualnotes.managers.FileManager.FileType.IMAGE;
 import static veeronten.actualnotes.managers.FileManager.imageRoot;
+import static veeronten.actualnotes.managers.FileManager.miniRoot;
 
 public class MyImageManager{
 
@@ -38,7 +41,15 @@ public class MyImageManager{
     }
 
     public static void matchMini(File dad){
-        File mini = new File(FileManager.miniRoot, dad.getName());
+        File mini=null;
+        try {
+            mini = new File(miniRoot,dad.getName());
+            mini.createNewFile();
+            L.i(mini.toString()+" was created");
+        } catch (IOException e) {
+            L.e("cant create a new file "+mini.toString(), e);
+        }
+
         try{
             Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
             FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
@@ -67,6 +78,47 @@ public class MyImageManager{
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
     }
+
+    public static int getFileAngleToRotate(File file){
+        int answer = 0;
+        ExifInterface ei = null;
+        try {
+            ei = new ExifInterface(file.getAbsolutePath());
+        } catch (IOException e) {
+            L.printStackTrace(e);
+            return answer;
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90: answer=90; break;
+            case ExifInterface.ORIENTATION_ROTATE_180: answer=180; break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270: answer=270; break;
+        }
+        return answer;
+    }
+    public static Bitmap rotateBitmap (Bitmap source, float angle){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return  Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),matrix,true);
+    }
+    public static void rotateImage(File fileToRotate){
+        Bitmap sourceBitmap = BitmapFactory.decodeFile(fileToRotate.getAbsolutePath());
+        L.d("angle: "+getFileAngleToRotate(fileToRotate));
+        Bitmap newBitmap = rotateBitmap(sourceBitmap, getFileAngleToRotate(fileToRotate));
+        try{
+            FileOutputStream fOut = new FileOutputStream(fileToRotate);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            L.d("hereeee");
+        }catch (Exception e) {
+            L.e("cant rotate file+ "+fileToRotate.getAbsolutePath(),e);
+        }
+    }
+
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Реальные размеры изображения

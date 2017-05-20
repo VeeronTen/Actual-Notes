@@ -1,6 +1,9 @@
 package veeronten.actualnotes.activities;
 
 //TODO ability to send audio and image info to my app. does no matter
+//TODO shared audio file is cut
+//TODO sometimes cam orientation is working wrong
+//TODO show fastaccess after installation
 
 import android.content.Intent;
 import android.net.Uri;
@@ -59,7 +62,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
 
         if(FileManager.getInstance()==null)
             new FileManager(getApplicationContext());
-        fileManager = fileManager.getInstance();
+        fileManager = FileManager.getInstance();
 
         layout = (ViewGroup) findViewById(R.id.activity_explore);
 
@@ -104,10 +107,10 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         Intent intent;
 
 
-        switch (fileManager.typeOf(modeFiles.get(position))) {
+        switch (FileManager.typeOf(modeFiles.get(position))) {
             case AUDIO:
                 item = modeFiles.get(position);
-                if(MyAudioManager.playing)
+                if(MyAudioManager.isPlaying())
                     MyAudioManager.stopPlay();
                 else
                     MyAudioManager.startPlay(item);
@@ -166,6 +169,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                     sendIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
                     sendIntent.setType("image/jpeg");
                     break;
+                default:break;
             }
 
             startActivity(sendIntent);
