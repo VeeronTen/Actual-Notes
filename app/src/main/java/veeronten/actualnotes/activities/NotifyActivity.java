@@ -24,8 +24,6 @@ import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyNotificationManager;
 
 public class NotifyActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
-    FileManager fileManager;
-
     ImageButton btnCreate;
     ListView lvNotifications;
 
@@ -38,9 +36,7 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
 
-        if(FileManager.getInstance()==null)
-            new FileManager(getApplicationContext());
-        fileManager = fileManager.getInstance();
+        FileManager.start(getApplicationContext());
 
         notifyList= MyNotificationManager.downloadNotifications();
         adapter = new ArrayAdapter<>(NotifyActivity.this, R.layout.item_notif, notifyList);

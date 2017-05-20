@@ -19,7 +19,6 @@ import static veeronten.actualnotes.managers.FileManager.FileType.TEXT;
 
 public class TextEditActivity extends AppCompatActivity{
     EditText textEditor;
-    FileManager fileManager;
     File fileToEdit;
     Boolean saveWhenClosing;
     //ViewGroup layout;
@@ -29,9 +28,7 @@ public class TextEditActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textedit);
 
-        if(FileManager.getInstance()==null)
-            new FileManager(getApplicationContext());
-        fileManager = fileManager.getInstance();
+        FileManager.start(getApplicationContext());
 
         //layout = (LinearLayout) findViewById(R.id.activity_textedit);
         textEditor =(EditText) findViewById(R.id.textEditor);
@@ -59,7 +56,7 @@ public class TextEditActivity extends AppCompatActivity{
             finish();
         }else if(item.getItemId()==R.id.item_delete){
             saveWhenClosing=false;
-            fileManager.removeFile(fileToEdit);
+            FileManager.removeFile(fileToEdit);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -69,7 +66,7 @@ public class TextEditActivity extends AppCompatActivity{
         super.onPause();
         if(saveWhenClosing) {
             if(textEditor.getText().toString().equals(""))
-                fileManager.removeFile(fileToEdit);
+                FileManager.removeFile(fileToEdit);
             else {
                 MyTextManager.saveChanges(fileToEdit, textEditor.getText().toString());
                 Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
@@ -85,14 +82,14 @@ public class TextEditActivity extends AppCompatActivity{
         answer= intent.getStringExtra(Intent.EXTRA_TEXT);
 
         if(answer!=null){
-            fileToEdit = fileManager.createNewFile(TEXT);
+            fileToEdit = FileManager.createNewFile(TEXT);
             return answer;
         }
 
 
         path = intent.getStringExtra("path");
         if(path == null)
-            fileToEdit = fileManager.createNewFile(TEXT);
+            fileToEdit = FileManager.createNewFile(TEXT);
         else
             fileToEdit = new File(path);
         answer = MyTextManager.readFile(fileToEdit);

@@ -27,7 +27,6 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     ImageButton btnCancel;
     ImageButton btnSave;
     File fileToRecord;
-    FileManager fileManager;
 
     ImageView microImage;
     TextView tvTime;
@@ -38,9 +37,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audiorecord);
-        if(FileManager.getInstance()==null)
-            new FileManager(getApplicationContext());
-        fileManager = fileManager.getInstance();
+        FileManager.start(getApplicationContext());
 
         microImage = (ImageView)findViewById(R.id.microImage);
 
@@ -57,7 +54,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave.setVisibility(View.INVISIBLE);
 
         tvTime = (TextView) findViewById(R.id.tvTime);
-        fileToRecord = fileManager.createNewFile(FileManager.FileType.AUDIO);
+        fileToRecord = FileManager.createNewFile(FileManager.FileType.AUDIO);
     }
 
     @Override
@@ -102,8 +99,8 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnSave.setVisibility(View.INVISIBLE);
                 MyAudioManager.stopPlay();
-                fileManager.removeFile(fileToRecord);
-                fileToRecord = fileManager.createNewFile(FileManager.FileType.AUDIO);
+                FileManager.removeFile(fileToRecord);
+                fileToRecord = FileManager.createNewFile(FileManager.FileType.AUDIO);
                 timer.cancel();
                 tvTime.setText("0 s");
                 break;
@@ -121,7 +118,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             timer.cancel();
         }
         if(fileToRecord.length()==0)
-            fileManager.removeFile(fileToRecord);
+            FileManager.removeFile(fileToRecord);
         else
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
         MyAudioManager.recording=false;

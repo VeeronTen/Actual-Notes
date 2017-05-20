@@ -17,8 +17,6 @@ import java.util.GregorianCalendar;
 import veeronten.actualnotes.L;
 
 public class FileManager {
-    public static FileManager instance;
-
     public enum FileType{TEXT, IMAGE, AUDIO, MINI}
 
     public static File textRoot;
@@ -28,9 +26,13 @@ public class FileManager {
 
     private static Context context;
 
-    public FileManager(Context context){
-        this.context = context;
-
+    public FileManager(){}
+    public static void start(Context lContext){
+        if (context!=null)
+            return;
+        context = lContext;
+        if(MyNotificationManager.getFastAccessStatus())
+            MyNotificationManager.sendFastAccessNotification();
         textRoot = new File(context.getFilesDir(), "text");
         textRoot.mkdirs();
         imageRoot = new File(context.getFilesDir(), "image");
@@ -40,10 +42,6 @@ public class FileManager {
         audioRoot = new File(context.getFilesDir(), "audio");
         audioRoot.mkdirs();
 
-        instance = this;
-    }
-    public static FileManager getInstance(){
-        return instance;
     }
     public static Context getContext(){
         return context;

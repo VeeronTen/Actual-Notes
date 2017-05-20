@@ -14,13 +14,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         L.i("Signal was received");
 
-        if(FileManager.getInstance()==null)
-            new FileManager(context);
+        FileManager.start(context);
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             L.i("That was a BOOT signal");
-            if(MyNotificationManager.getFastAccessStatus())
-                MyNotificationManager.sendFastAccessNotification();
             MyNotificationManager.downloadNotifications();
             return;
         }

@@ -19,6 +19,8 @@ public class ImageActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FileManager.start(getApplicationContext());
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         newImg = FileManager.createNewFile(FileManager.FileType.IMAGE);
         Uri photoURI = FileProvider.getUriForFile(this,
