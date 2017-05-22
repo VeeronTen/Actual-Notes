@@ -1,8 +1,5 @@
 package veeronten.actualnotes.activities;
 
-//TODO ability to send audio and image info to my app. does no matter
-//TODO shared audio file is cut
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -151,7 +148,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                             chosenFile);
                     L.d(audioURI.toString());
                     sendIntent.putExtra(Intent.EXTRA_STREAM, audioURI);
-                    sendIntent.setType("audio/mp3");
+                    sendIntent.setType("audio/aac");
                     break;
                 case IMAGE:
                     chosenFile = MyImageManager.getBig(chosenFile.getName());
@@ -184,6 +181,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             case R.id.btnAudioMode:
                 if(mode==Mode.AUDIO){
                     Intent intent = new Intent(this, AudioRecordActivity.class);
+                    intent.setAction("actualnotes.intent.action.START_DICTAPHONE");
                     startActivity(intent);
                     return;
                 } else audioMode();

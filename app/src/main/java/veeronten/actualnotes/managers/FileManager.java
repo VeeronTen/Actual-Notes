@@ -187,7 +187,7 @@ public class FileManager {
                 return FileType.TEXT;
             case "i.jpeg":
                 return FileType.IMAGE;
-            case "a.mp3":
+            case "a.aac":
                 return FileType.AUDIO;
         }
         return null;
@@ -232,7 +232,7 @@ public class FileManager {
                 postfix="i.jpeg";
                 break;
             case AUDIO:
-                postfix="a.mp3";
+                postfix="a.aac";
                 break;
         }
         return postfix;

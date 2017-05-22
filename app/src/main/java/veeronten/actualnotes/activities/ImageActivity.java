@@ -12,7 +12,6 @@ import android.widget.Toast;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ public class ImageActivity extends AppCompatActivity{
         FileManager.start(getApplicationContext());
         Intent receiveIntent=getIntent();
         if(receiveIntent.getAction().equals("android.intent.action.SEND")) {
-            receiveImage(receiveIntent);
+            receiveImage();
             finish();
         }else if(receiveIntent.getAction().equals("actualnotes.intent.action.START_CAM")){
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -54,20 +53,20 @@ public class ImageActivity extends AppCompatActivity{
         finish();
     }
 
-    private void receiveImage(Intent intent) {
+    private void receiveImage() {
         Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
         L.d("source uri: "+uri.getPath());
-        String path = getPath(uri);
-        L.d("source path: "+path);
+//        String path = getPath(uri);
+//        L.d("source path: "+path);
 
-        File sourceFile = new File(path);
+        //File sourceFile = new File(path);
         File destinationFile = FileManager.createNewFile(FileManager.FileType.IMAGE);
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
 
         try {
-            bis = new BufferedInputStream(new FileInputStream(sourceFile));
+            bis = new BufferedInputStream(getContentResolver().openInputStream(uri));
             bos = new BufferedOutputStream(new FileOutputStream(destinationFile, false));
             byte[] buf = new byte[1024];
             bis.read(buf);

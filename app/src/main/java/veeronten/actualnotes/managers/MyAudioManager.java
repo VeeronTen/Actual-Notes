@@ -19,7 +19,7 @@ public class MyAudioManager {
     static {
         recording=false;
         mediaRecorder=null;
-        mediaPlayer=null;
+        mediaPlayer= new MediaPlayer();
     }
 
     public static int getDuration(File f){
@@ -54,8 +54,10 @@ public class MyAudioManager {
         try {
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mediaRecorder.setAudioEncodingBitRate(16);
+            mediaRecorder.setAudioSamplingRate(44100);
             mediaRecorder.setOutputFile(file.getAbsolutePath());
             mediaRecorder.prepare();
             mediaRecorder.start();
@@ -74,12 +76,12 @@ public class MyAudioManager {
     }
 
     public static void startPlay(File file) {
+        L.d("startPlay");
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-
             mediaPlayer = new MediaPlayer();
             FileInputStream fis = new FileInputStream(file);
             mediaPlayer.setDataSource(fis.getFD());
@@ -93,8 +95,11 @@ public class MyAudioManager {
         }
     }
     public static void stopPlay() {
+        L.d("stopPlay");
         if (mediaPlayer != null) {
+            L.d("1");
             mediaPlayer.stop();
+            L.d("2");
         }
     }
     public static boolean isPlaying(){
