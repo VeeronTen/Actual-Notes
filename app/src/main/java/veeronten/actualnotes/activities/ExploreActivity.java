@@ -117,7 +117,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 break;
             case IMAGE:
                 item = MyImageManager.getBig((modeFiles.get(position)).getName());
-                L.d(item.toString());
                 intent = new Intent(this, LookActivity.class);
                 intent.putExtra("path", item.getAbsolutePath());
                 startActivity(intent);
@@ -199,6 +198,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             case R.id.btnImageMode:
                 if(mode== IMAGE){
                     Intent intent = new Intent(this, ImageActivity.class);
+                    intent.setAction("actualnotes.intent.action.START_CAM");
                     startActivity(intent);
                     return;
                 } else imageMode();

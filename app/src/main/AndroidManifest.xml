@@ -14,6 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="veeronten.actualnotes.fileProvider"
@@ -23,12 +24,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
         <activity android:name=".activities.ExploreActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.TextEditActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -36,8 +39,26 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AudioRecordActivity" />
-        <activity android:name=".activities.ImageActivity" />
+
+        <activity android:name=".activities.AudioRecordActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <data android:mimeType="audio/*"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.ImageActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <data android:mimeType="image/*"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="actualnotes.intent.action.START_CAM" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.LookActivity" />
         <activity android:name=".activities.NotifyActivity" />
         <activity android:name=".activities.SettingsActivity" />
