@@ -106,19 +106,16 @@ public class MyImageManager{
     }
     public static void rotateImage(File fileToRotate){
         Bitmap sourceBitmap = BitmapFactory.decodeFile(fileToRotate.getAbsolutePath());
-        L.d("angle: "+getFileAngleToRotate(fileToRotate));
         Bitmap newBitmap = rotateBitmap(sourceBitmap, getFileAngleToRotate(fileToRotate));
         try{
             FileOutputStream fOut = new FileOutputStream(fileToRotate);
             newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
-            L.d("hereeee");
         }catch (Exception e) {
             L.e("cant rotate file+ "+fileToRotate.getAbsolutePath(),e);
         }
     }
-
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Реальные размеры изображения
@@ -138,7 +135,6 @@ public class MyImageManager{
                 inSampleSize *= 2;
             }
         }
-
         return inSampleSize;
     }
 

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.managers.FileManager;
@@ -30,33 +29,23 @@ import veeronten.actualnotes.managers.MyTextManager;
 
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
 
-
-
 public class ExploreActivity extends AppCompatActivity implements  View.OnClickListener, ListView.OnItemClickListener{
     enum Mode {TEXT, AUDIO, IMAGE, COMMON};
     Mode mode;
-
     ViewGroup layout;
-
     ListView list;
     ArrayList<File> modeFiles;
-
     BaseAdapter currentAdapter;
-
     ImageButton btnCommonMode;
     ImageButton btnAudioMode;
     ImageButton btnTextMode;
     ImageButton btnImageMode;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
-
         FileManager.start(getApplicationContext());
-
         layout = (ViewGroup) findViewById(R.id.activity_explore);
-
         list = (ListView)findViewById(R.id.list);
             list.setOnItemClickListener(this);
             registerForContextMenu(list);
@@ -68,11 +57,8 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             btnTextMode.setOnClickListener(this);
         btnImageMode = (ImageButton) findViewById(R.id.btnImageMode);
             btnImageMode.setOnClickListener(this);
-
         commonMode();
-        //MyNotificationManager.sendFastAccessNotification();
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
@@ -91,13 +77,10 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         File item;
         Intent intent;
-
-
         switch (FileManager.typeOf(modeFiles.get(position))) {
             case AUDIO:
                 item = modeFiles.get(position);
@@ -126,17 +109,14 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         menu.add(0,0,0,"Share");
         menu.add(0,1,0,"Delete");
     }
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         File chosenFile = modeFiles.get(acmi.position);
-
         if(item.getItemId()==0){
             //share
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-
             switch (FileManager.typeOf(chosenFile)){
                 case TEXT:
                     sendIntent.putExtra(Intent.EXTRA_TEXT, MyTextManager.readFile(chosenFile));
@@ -146,7 +126,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                     Uri audioURI = FileProvider.getUriForFile(this,
                             "veeronten.actualnotes.fileProvider",
                             chosenFile);
-                    L.d(audioURI.toString());
                     sendIntent.putExtra(Intent.EXTRA_STREAM, audioURI);
                     sendIntent.setType("audio/aac");
                     break;
@@ -155,15 +134,13 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                     Uri photoURI = FileProvider.getUriForFile(this,
                             "veeronten.actualnotes.fileProvider",
                             chosenFile);
-                    L.d(photoURI.toString());
                     sendIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
                     sendIntent.setType("image/jpeg");
                     break;
                 default:break;
             }
-
             startActivity(sendIntent);
-        }else {
+        }else{
             //delete
             modeFiles.remove(acmi.position);
             FileManager.removeFile(chosenFile);
@@ -171,7 +148,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         }
         return true;
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -203,7 +179,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 break;
         }
     }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -223,51 +198,34 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                     break;
             }
     }
-
-
-
-
-
     private void  commonMode(){
         mode = Mode.COMMON;
         modeFiles = FileManager.getFiles(FileManager.FileType.TEXT);
         modeFiles.addAll(FileManager.getFiles(FileManager.FileType.AUDIO));
         modeFiles.addAll(FileManager.getFiles(FileManager.FileType.MINI));
-
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
-
         resetStyle();
     }
-
     private void textMode(){
-
-
         mode = Mode.TEXT;
         modeFiles = FileManager.getFiles(FileManager.FileType.TEXT);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
-
         resetStyle();
         btnTextMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_text));
         }
-
     private void audioMode(){
-
-
         mode = Mode.AUDIO;
         modeFiles = FileManager.getFiles(FileManager.FileType.AUDIO);
         modeFiles = sort(modeFiles);
         currentAdapter = new MyCommonAdapter(this,modeFiles);
         list.setAdapter(currentAdapter);
-
         resetStyle();
         btnAudioMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_audio));
-
     }
-///////////////////////
     private void imageMode(){
         mode = IMAGE;
         modeFiles = FileManager.getFiles(FileManager.FileType.MINI);
@@ -276,27 +234,21 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         list.setAdapter(currentAdapter);
         resetStyle();
         btnImageMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_image));
-
     }
-
     private ArrayList<File> sort(ArrayList<File> sourse){
         ArrayList<File> answer = new ArrayList<>();
-
         Object[] boba=sourse.toArray();
         Arrays.sort(boba,new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
                 Integer[] i1 = new Integer[6];
                 Integer[] i2 = new Integer[6];
-
                 String[] s1 = ((File)o1).getName().split("-|:");
                 String[] s2 = ((File)o2).getName().split("-|:");
-
                 for(int i =0;i<6;i++){
                     i1[i] = Integer.valueOf(s1[i]);
                     i2[i] = Integer.valueOf(s2[i]);
                 }
-
                 for(int i =0;i<6;i++)
                     if(i1[i].compareTo(i2[i])!=0)
                         return i1[i].compareTo(i2[i]);
@@ -308,7 +260,6 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             answer.add((File)o);
         return answer;
     }
-
     private void resetStyle(){
         btnCommonMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_common));
         btnTextMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_text));

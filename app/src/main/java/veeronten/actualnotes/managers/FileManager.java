@@ -18,14 +18,11 @@ import veeronten.actualnotes.L;
 
 public class FileManager {
     public enum FileType{TEXT, IMAGE, AUDIO, MINI}
-
     public static File textRoot;
     public static File audioRoot;
     public static File imageRoot;
     public static File miniRoot;
-
     private static Context context;
-
     public FileManager(){}
     public static void start(Context lContext){
         if (context!=null)
@@ -46,15 +43,12 @@ public class FileManager {
     public static Context getContext(){
         return context;
     }
-
     public static File createNewFile(FileType fileType){
-
         String newName = FileManager.generateFilenamePrefix()+'-'+getPostfixByType(fileType);
         File newFile = new File(getRootByType(fileType), newName);
         try {
             newFile.createNewFile();
             L.i(newFile.toString()+" was created");
-
             return newFile;
         } catch (IOException e) {
             L.e("cant create a new file "+newFile.toString(), e);
@@ -73,14 +67,12 @@ public class FileManager {
         }
         return;
     }
-
     public static boolean deleteLastFromDCIM() {
         boolean success = false;
         GregorianCalendar now = new GregorianCalendar();
         try {
             //Samsungs:
             File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "DCIM/Camera/");
-            L.d(folder.toString());
             if(!folder.exists()){ //other phones:
                 File[] subfolders = new File(Environment.getExternalStorageDirectory() + File.separator + "DCIM").listFiles();
                 for(File subfolder : subfolders){
@@ -137,10 +129,8 @@ public class FileManager {
         }
 
     }
-
     public ArrayList<File> getFiles(){
         ArrayList<File> answer = new ArrayList<>();
-
         answer.addAll(getFiles(FileType.TEXT));
         answer.addAll(getFiles(FileType.AUDIO));
         answer.addAll(getFiles(FileType.IMAGE));
@@ -152,14 +142,12 @@ public class FileManager {
             answer.add(f);
         return  answer;
     }
-
     public static int countOfFiles(){
         return countOfFiles(FileType.TEXT)+countOfFiles(FileType.AUDIO)+countOfFiles(FileType.IMAGE);
     }
     public static int countOfFiles(FileType fileType){
         return getRootByType(fileType).listFiles().length;
     }
-
     public static String ageOf(File f){
         String answer;
 
@@ -192,7 +180,6 @@ public class FileManager {
         }
         return null;
     }
-
     public static String generateFilenamePrefix(){
         Calendar cal = new GregorianCalendar();
         String prefix = cal.get(Calendar.YEAR)+"-"+
@@ -203,7 +190,6 @@ public class FileManager {
                 cal.get(Calendar.SECOND);
         return prefix;
     }
-
     private static File getRootByType(FileType fileType){
         File root=null;
         switch (fileType){

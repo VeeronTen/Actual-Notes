@@ -15,7 +15,7 @@ public class MyTextManager {
     public static String readFile(File file){
         StringBuffer sb = new StringBuffer();
         try {
-            file.createNewFile();// НУЖНО?
+            file.createNewFile();
             BufferedReader br = new BufferedReader(new FileReader(file));
             String s;
             while((s=br.readLine())!=null)

@@ -2,10 +2,8 @@ package veeronten.actualnotes.activities;
 
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,36 +25,26 @@ import veeronten.actualnotes.R;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 
-
 public class AudioRecordActivity extends AppCompatActivity implements View.OnClickListener{
     ViewGroup vg;
     ImageButton btnPlay;
     ImageButton btnCancel;
     ImageButton btnSave;
     File fileToRecord;
-
     ImageView microImage;
     TextView tvTime;
     Timer timer;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FileManager.start(getApplicationContext());
-
         Intent receiveIntent=getIntent();
         if(receiveIntent.getAction().equals("android.intent.action.SEND")) {
-            L.d("WANNA RECEIVE");
             receiveAudio();
-            L.d("WANNA FINISH");
             finish();
         }else if(receiveIntent.getAction().equals("actualnotes.intent.action.START_DICTAPHONE")) {
-
-
             setContentView(R.layout.activity_audiorecord);
             microImage = (ImageView) findViewById(R.id.microImage);
-
             vg = (ViewGroup) findViewById(R.id.activity_audiorecord);
             vg.setOnClickListener(this);
             btnPlay = (ImageButton) findViewById(R.id.btnPlay);
@@ -68,12 +56,10 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave = (ImageButton) findViewById(R.id.btnSave);
             btnSave.setOnClickListener(this);
             btnSave.setVisibility(View.INVISIBLE);
-
             tvTime = (TextView) findViewById(R.id.tvTime);
             fileToRecord = FileManager.createNewFile(FileManager.FileType.AUDIO);
         }
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -99,10 +85,8 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                     microImage.setColorFilter(getResources().getColor(R.color.microOn));
                     MyAudioManager.stopPlay();
                     MyAudioManager.startRecording(fileToRecord);
-
                     timer = new Timer();
                     timer.schedule(new MyTimerTask(), 0, 1000);
-
                     MyAudioManager.recording=true;
                 }
                 break;
@@ -127,7 +111,6 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -144,27 +127,17 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     private class MyTimerTask extends TimerTask{
         int sec=0;
         @Override
-        public void run() {
-            tvTime.post(new Runnable() {
-                public void run() {
-                    tvTime.setText(sec++ +" s");
+        public void run() {tvTime.post(new Runnable() {
+                public void run() {tvTime.setText(sec++ +" s");
                 }
-            });
-        }
-
+            }); }
     }
-
     private void receiveAudio() {
         Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
-        L.d("source uri: "+uri.getPath());
-        //String path = getPath(uri);
-        //L.d("source path: "+path);
-
+        L.i("source uri: "+uri.getPath());
         File destinationFile = FileManager.createNewFile(FileManager.FileType.AUDIO);
-
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
-
         try {
             bis = new BufferedInputStream(getContentResolver().openInputStream(uri));
             bos = new BufferedOutputStream(new FileOutputStream(destinationFile, false));
@@ -173,7 +146,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             do {
                 bos.write(buf);
             } while(bis.read(buf) != -1);
-            L.d("audio was received");
+            L.i("audio was received");
             Toast.makeText(this, "Audio was received",Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             L.printStackTrace(e);
@@ -186,25 +159,18 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
-
-    private String getPath(Uri uri) {
-        try {
-            L.d("1");
-            String[] projection = {MediaStore.Audio.Media.DATA};
-            L.d("2");
-            Cursor cursor = managedQuery(uri, projection, null, null, null);
-            L.d("3");
-            startManagingCursor(cursor);
-            L.d("4");
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-            L.d("5");
-            cursor.moveToFirst();
-            L.d("6");
-            return cursor.getString(column_index);
-        }catch (Exception e){
-            return uri.getPath();
-        }
-    }
+//    private String getPath(Uri uri) {
+//        try {
+//            String[] projection = {MediaStore.Audio.Media.DATA};
+//            Cursor cursor = managedQuery(uri, projection, null, null, null);
+//            startManagingCursor(cursor);
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+//            cursor.moveToFirst();
+//            return cursor.getString(column_index);
+//        }catch (Exception e){
+//            return uri.getPath();
+//        }
+//    }
 }
 
 

@@ -21,27 +21,16 @@ public class TextEditActivity extends AppCompatActivity{
     EditText textEditor;
     File fileToEdit;
     Boolean saveWhenClosing;
-    //ViewGroup layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textedit);
-
         FileManager.start(getApplicationContext());
-
-        //layout = (LinearLayout) findViewById(R.id.activity_textedit);
         textEditor =(EditText) findViewById(R.id.textEditor);
-
         saveWhenClosing = true;
-
-
-
         textEditor.setText(getText());
-
-        //layout.setBackgroundColor(getResources().getColor(R.color.textBack));
     }
-
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_textedit, menu);
         return super.onCreateOptionsMenu(menu);
@@ -73,7 +62,6 @@ public class TextEditActivity extends AppCompatActivity{
             }
         }
     }
-
     private String getText(){
         Intent intent = getIntent();
         String answer;

@@ -1,7 +1,6 @@
 package veeronten.actualnotes.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,7 +20,6 @@ import veeronten.actualnotes.managers.MyImageManager;
 
 public class ImageActivity extends AppCompatActivity{
     File newImg;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +34,10 @@ public class ImageActivity extends AppCompatActivity{
             Uri photoURI = FileProvider.getUriForFile(this,
                     "veeronten.actualnotes.fileProvider",
                     newImg);
-
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, 1);
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -52,19 +48,12 @@ public class ImageActivity extends AppCompatActivity{
             FileManager.removeFile(newImg);
         finish();
     }
-
     private void receiveImage() {
         Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
-        L.d("source uri: "+uri.getPath());
-//        String path = getPath(uri);
-//        L.d("source path: "+path);
-
-        //File sourceFile = new File(path);
+        L.i("source uri: "+uri.getPath());
         File destinationFile = FileManager.createNewFile(FileManager.FileType.IMAGE);
-
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
-
         try {
             bis = new BufferedInputStream(getContentResolver().openInputStream(uri));
             bos = new BufferedOutputStream(new FileOutputStream(destinationFile, false));
@@ -73,7 +62,7 @@ public class ImageActivity extends AppCompatActivity{
             do {
                 bos.write(buf);
             } while(bis.read(buf) != -1);
-            L.d("image was received");
+            L.i("image was received");
             Toast.makeText(this, "Image was received",Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             L.printStackTrace(e);
@@ -87,17 +76,16 @@ public class ImageActivity extends AppCompatActivity{
         }
         MyImageManager.matchMini(destinationFile);
     }
-
-    private String getPath(Uri uri) {
-        try {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor cursor = managedQuery(uri, projection, null, null, null);
-            startManagingCursor(cursor);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        }catch (Exception e){
-            return uri.getPath();
-        }
-    }
+//    private String getPath(Uri uri) {
+//        try {
+//            String[] projection = {MediaStore.Images.Media.DATA};
+//            Cursor cursor = managedQuery(uri, projection, null, null, null);
+//            startManagingCursor(cursor);
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//            cursor.moveToFirst();
+//            return cursor.getString(column_index);
+//        }catch (Exception e){
+//            return uri.getPath();
+//        }
+//    }
 }

@@ -1,5 +1,4 @@
 package veeronten.actualnotes.activities;
-//in a cold light of morning..
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -26,21 +25,16 @@ import veeronten.actualnotes.managers.MyNotificationManager;
 public class NotifyActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
     ImageButton btnCreate;
     ListView lvNotifications;
-
     ArrayList<String> notifyList;
     ArrayAdapter<String> adapter;
-
     String itemActionToEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
-
         FileManager.start(getApplicationContext());
-
         notifyList= MyNotificationManager.downloadNotifications();
         adapter = new ArrayAdapter<>(NotifyActivity.this, R.layout.item_notif, notifyList);
-
         btnCreate = (ImageButton)findViewById(R.id.btnCreate);
             btnCreate.setOnClickListener(this);
         lvNotifications = (ListView)findViewById(R.id.lvNotifications);
@@ -59,21 +53,16 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
         itemActionToEdit = notifyList.get(position);
         new TimePickerDialog(this, R.style.DialogTheme, CallBackWithEdit, MyTimeFormat.getHoursFromString(itemActionToEdit), MyTimeFormat.getMinutesFromString(itemActionToEdit), true).show();
     }
-
     TimePickerDialog.OnTimeSetListener CallBackWithEdit = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute){
             String actionToRegister = MyTimeFormat.convertToString(hourOfDay, minute);
-
             if(notifyList.contains(actionToRegister))
                 return;
-
             MyNotificationManager.cancelNotification(itemActionToEdit);
             notifyList.remove(notifyList.indexOf(itemActionToEdit));
-
             MyNotificationManager.registerNewNotification(actionToRegister);
             notifyList.add(actionToRegister);
-
             Collections.sort(notifyList, new Comparator<String>() {
                 public int compare(String o1, String o2) {
                     return o1.compareTo(o2);
@@ -81,16 +70,13 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             });
             adapter.notifyDataSetChanged();
             MyNotificationManager.saveNotifications(notifyList);
-
             L.i(itemActionToEdit+" was changed to "+actionToRegister);
     }
     };
-
     TimePickerDialog.OnTimeSetListener CallBackWithCreate = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             String actionToRegister = MyTimeFormat.convertToString(hourOfDay, minute);
-
             if(notifyList.contains(actionToRegister))
                 return;
             MyNotificationManager.registerNewNotification(actionToRegister);
@@ -104,27 +90,19 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             MyNotificationManager.saveNotifications(notifyList);
         }
     };
-
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0,0,0,"Delete");
     }
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         int position = acmi.position;
-        L.d("pos="+position);
         String text = notifyList.get(position);
-        L.d("text="+text);
         MyNotificationManager.cancelNotification(text);
-
         notifyList.remove(position);
         adapter.notifyDataSetChanged();
         MyNotificationManager.saveNotifications(notifyList);
         return true;
     }
-
-
 }

@@ -76,7 +76,6 @@ public class MyAudioManager {
     }
 
     public static void startPlay(File file) {
-        L.d("startPlay");
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
@@ -95,11 +94,8 @@ public class MyAudioManager {
         }
     }
     public static void stopPlay() {
-        L.d("stopPlay");
         if (mediaPlayer != null) {
-            L.d("1");
             mediaPlayer.stop();
-            L.d("2");
         }
     }
     public static boolean isPlaying(){
