@@ -122,8 +122,11 @@ public class MyNotificationManager {
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         // Намерение для запуска второй активности
         Intent imageIntent = new Intent(context, ImageActivity.class);
+            imageIntent.setAction("actualnotes.intent.action.START_CAM");
+
         Intent textIntent = new Intent(context, TextEditActivity.class);
         Intent audioIntent = new Intent(context, AudioRecordActivity.class);
+            audioIntent.setAction("actualnotes.intent.action.START_DICTAPHONE");
 
         PendingIntent imagePIntent = PendingIntent.getActivity(context, 0, imageIntent, 0);
         PendingIntent textPIntent = PendingIntent.getActivity(context, 0, textIntent, 0);
