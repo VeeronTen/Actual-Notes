@@ -3,6 +3,7 @@ package veeronten.actualnotes.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -261,9 +262,9 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         return answer;
     }
     private void resetStyle(){
-        btnCommonMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_common));
-        btnTextMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_text));
-        btnImageMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        btnAudioMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_audio));
+        btnCommonMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_common, null));
+        btnTextMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_text, null));
+        btnImageMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_camera, null));
+        btnAudioMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_audio, null));
     }
 }

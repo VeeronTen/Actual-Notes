@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatDelegate;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class FileManager {
         if (context!=null)
             return;
         context = lContext;
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         if(MyNotificationManager.getFastAccessStatus())
             MyNotificationManager.sendFastAccessNotification();
         textRoot = new File(context.getFilesDir(), "text");

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -120,31 +121,25 @@ public class MyNotificationManager {
     }
     public static void sendFastAccessNotification(){
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        // Намерение для запуска второй активности
         Intent imageIntent = new Intent(context, ImageActivity.class);
-            imageIntent.setAction("actualnotes.intent.action.START_CAM");
-
+        imageIntent.setAction("actualnotes.intent.action.START_CAM");
         Intent textIntent = new Intent(context, TextEditActivity.class);
         Intent audioIntent = new Intent(context, AudioRecordActivity.class);
-            audioIntent.setAction("actualnotes.intent.action.START_DICTAPHONE");
-
+        audioIntent.setAction("actualnotes.intent.action.START_DICTAPHONE");
         PendingIntent imagePIntent = PendingIntent.getActivity(context, 0, imageIntent, 0);
         PendingIntent textPIntent = PendingIntent.getActivity(context, 0, textIntent, 0);
         PendingIntent audioPIntent = PendingIntent.getActivity(context, 0, audioIntent, 0);
-
-        // Строим уведомление
-        Notification notification = new Notification.Builder(context)
+        Notification notification = new NotificationCompat.Builder(context)
                 .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
                 .setTicker("Actual Notes fast access")
                 .setContentTitle("Actual Notes")
                 .setContentText("")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .addAction(R.drawable.ic_camera_notif, "", imagePIntent)
-                .addAction(R.drawable.ic_text_notif, "", textPIntent)
-                .addAction(R.drawable.ic_audio_notif, "", audioPIntent)
-                .setOngoing(true)
+                .addAction(R.mipmap.ic_camera_notif, "", imagePIntent)
+                .addAction(R.mipmap.ic_text_notif, "", textPIntent)
+                .addAction(R.mipmap.ic_audio_notif, "", audioPIntent)
                 .build();
-        //notification.flags |= Notification.FLAG_NO_CLEAR;
+        notification.flags |= Notification.FLAG_NO_CLEAR;
         nm.notify(0, notification);
     }
 
