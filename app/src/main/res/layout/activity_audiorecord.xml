@@ -47,13 +47,12 @@
 
     <TextView
         android:text="0 s"
-        android:scaleX="6"
-        android:scaleY="6"
+        android:textSize="60dp"
         android:textColor="@color/textColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
         android:layout_centerHorizontal="true"
-        android:layout_margin="27dp"
+        android:layout_margin="5dp"
         android:id="@+id/tvTime" />
 </RelativeLayout>
