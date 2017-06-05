@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.json.JSONArray;
@@ -129,16 +130,32 @@ public class MyNotificationManager {
         PendingIntent imagePIntent = PendingIntent.getActivity(context, 0, imageIntent, 0);
         PendingIntent textPIntent = PendingIntent.getActivity(context, 0, textIntent, 0);
         PendingIntent audioPIntent = PendingIntent.getActivity(context, 0, audioIntent, 0);
-        Notification notification = new NotificationCompat.Builder(context)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
-                .setTicker("Actual Notes fast access")
-                .setContentTitle("Actual Notes")
-                .setContentText("")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .addAction(R.mipmap.ic_camera_notif, "", imagePIntent)
-                .addAction(R.mipmap.ic_text_notif, "", textPIntent)
-                .addAction(R.mipmap.ic_audio_notif, "", audioPIntent)
-                .build();
+        Notification notification=null;
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            notification = new NotificationCompat.Builder(context)
+                    .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
+                    .setTicker("Actual Notes fast access")
+                    .setContentTitle("Actual Notes")
+                    .setContentText("")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .addAction(R.mipmap.ic_camera_notif, "", imagePIntent)
+                    .addAction(R.mipmap.ic_text_notif, "", textPIntent)
+                    .addAction(R.mipmap.ic_audio_notif, "", audioPIntent)
+                    .build();
+        }else{
+            notification = new NotificationCompat.Builder(context)
+                    .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
+                    .setTicker("Actual Notes fast access")
+                    .setContentTitle("Actual Notes")
+                    .setContentText("")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .addAction(R.mipmap.ic_camera_notif, "camera                                    ", imagePIntent)
+                    .addAction(R.mipmap.ic_text_notif, "text                                      ", textPIntent)
+                    .addAction(R.mipmap.ic_audio_notif, "audio                                     ", audioPIntent)
+                    .build();
+        }
         notification.flags |= Notification.FLAG_NO_CLEAR;
         nm.notify(0, notification);
     }

@@ -30,8 +30,6 @@ public class FileManager {
             return;
         context = lContext;
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        if(MyNotificationManager.getFastAccessStatus())
-            MyNotificationManager.sendFastAccessNotification();
         textRoot = new File(context.getFilesDir(), "text");
         textRoot.mkdirs();
         imageRoot = new File(context.getFilesDir(), "image");
@@ -41,6 +39,20 @@ public class FileManager {
         audioRoot = new File(context.getFilesDir(), "audio");
         audioRoot.mkdirs();
 
+        for (File f : getRootByType(FileType.IMAGE).listFiles())
+            if(f.length()==0)
+                f.delete();
+        for (File f : getRootByType(FileType.TEXT).listFiles())
+            if(f.length()==0)
+                f.delete();
+        for (File f : getRootByType(FileType.MINI).listFiles())
+            if(f.length()==0)
+                f.delete();
+        for (File f : getRootByType(FileType.AUDIO).listFiles())
+            if(f.length()==0)
+                f.delete();
+        if(MyNotificationManager.getFastAccessStatus())
+            MyNotificationManager.sendFastAccessNotification();
     }
     public static Context getContext(){
         return context;

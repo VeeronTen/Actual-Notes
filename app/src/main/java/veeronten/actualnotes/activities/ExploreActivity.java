@@ -1,8 +1,13 @@
 package veeronten.actualnotes.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +20,14 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
 import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.managers.FileManager;
@@ -41,6 +48,9 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
     ImageButton btnAudioMode;
     ImageButton btnTextMode;
     ImageButton btnImageMode;
+    public final static int CAMERA_PERMISSION_REQUEST = 314;
+    public final static int MICROPHONE_PERMISSION_REQUEST = 764;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,6 +167,9 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 break;
             case R.id.btnAudioMode:
                 if(mode==Mode.AUDIO){
+                    if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
+                        if(!checkAudioPermission())
+                            return;
                     Intent intent = new Intent(this, AudioRecordActivity.class);
                     intent.setAction("actualnotes.intent.action.START_DICTAPHONE");
                     startActivity(intent);
@@ -172,6 +185,9 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 break;
             case R.id.btnImageMode:
                 if(mode== IMAGE){
+                    if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
+                        if(!checkCameraPermission())
+                            return;
                     Intent intent = new Intent(this, ImageActivity.class);
                     intent.setAction("actualnotes.intent.action.START_CAM");
                     startActivity(intent);
@@ -266,5 +282,31 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         btnTextMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_text, null));
         btnImageMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_camera, null));
         btnAudioMode.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_audio, null));
+    }
+    @TargetApi(23)
+    private Boolean checkAudioPermission(){
+        Boolean answer = false;
+        if ((checkSelfPermission(Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED)||(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, MICROPHONE_PERMISSION_REQUEST);
+        } else answer = true;
+        return  answer;
+    }
+    @TargetApi(23)
+    private Boolean checkCameraPermission(){
+        Boolean answer = false;
+        if (checkSelfPermission(Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+        } else answer = true;
+        return  answer;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            if ((requestCode == MICROPHONE_PERMISSION_REQUEST)&&(grantResults[0] == PackageManager.PERMISSION_GRANTED)&&(grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                    ||
+                    (requestCode == CAMERA_PERMISSION_REQUEST)&&(grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                L.i("permissions were gotten");
+            }
+            else Toast.makeText(getApplicationContext(), "You must allow permission record audio to your mobile device.", Toast.LENGTH_LONG).show();
     }
 }
