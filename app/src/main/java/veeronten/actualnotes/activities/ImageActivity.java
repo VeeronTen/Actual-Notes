@@ -1,6 +1,8 @@
 package veeronten.actualnotes.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +15,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.managers.FileManager;
@@ -35,6 +38,12 @@ public class ImageActivity extends AppCompatActivity{
                     "veeronten.actualnotes.fileProvider",
                     newImg);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+            List<ResolveInfo> resInfoList = getApplicationContext().getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                getApplicationContext().grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
             startActivityForResult(takePictureIntent, 1);
         }
     }

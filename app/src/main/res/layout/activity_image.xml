@@ -26,14 +26,14 @@
     <ImageButton
         android:id="@+id/btnOk"
         app:srcCompat="@drawable/ic_add"
-        android:background="@color/ButtonColor"
+        android:background="@color/button_color_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"/>
     <ImageButton
         android:id="@+id/btnAgain"
         app:srcCompat="@drawable/ic_again"
-        android:background="@color/ButtonColor"
+        android:background="@color/button_color_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"/>

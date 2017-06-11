@@ -1,5 +1,6 @@
 package veeronten.actualnotes.activities;
 
+//TODO AlarmManager is too late for Android 4.4+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -224,6 +225,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         currentAdapter = new MyCommonAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
         resetStyle();
+        btnCommonMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_common_pressed));
     }
     private void textMode(){
         mode = Mode.TEXT;

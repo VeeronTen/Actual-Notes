@@ -25,7 +25,7 @@
 
         <ImageButton
             app:srcCompat="@drawable/ic_common"
-            android:background="@color/ButtonColorExplore"
+            android:background="@color/button_color_explore_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -33,7 +33,7 @@
             android:elevation="0dp" />
         <ImageButton
             app:srcCompat="@drawable/ic_camera"
-            android:background="@color/ButtonColorExplore"
+            android:background="@color/button_color_explore_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,14 +41,14 @@
             android:elevation="0dp" />
         <ImageButton
             app:srcCompat="@drawable/ic_text"
-            android:background="@color/ButtonColorExplore"
+            android:background="@color/button_color_explore_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/btnTextMode" />
         <ImageButton
             app:srcCompat="@drawable/ic_audio"
-            android:background="@color/ButtonColorExplore"
+            android:background="@color/button_color_explore_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

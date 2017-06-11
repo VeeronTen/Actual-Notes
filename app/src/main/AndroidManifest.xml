@@ -32,14 +32,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TextEditActivity">
+        <activity android:name=".activities.TextEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <data android:mimeType="text/plain"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AudioRecordActivity" >
+        <activity android:name=".activities.AudioRecordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <data android:mimeType="audio/*"/>
@@ -49,7 +51,8 @@
                 <action android:name="actualnotes.intent.action.START_DICTAPHONE" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ImageActivity" >
+        <activity android:name=".activities.ImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <data android:mimeType="image/jpeg"/>
