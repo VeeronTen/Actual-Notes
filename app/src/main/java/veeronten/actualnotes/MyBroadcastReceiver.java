@@ -23,5 +23,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
 
         MyNotificationManager.sendUsualNotification();
+        MyNotificationManager.registerNewNotification(intent.getAction());
     }
 }

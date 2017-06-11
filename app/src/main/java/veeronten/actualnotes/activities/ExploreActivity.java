@@ -1,6 +1,5 @@
 package veeronten.actualnotes.activities;
 
-//TODO AlarmManager is too late for Android 4.4+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;

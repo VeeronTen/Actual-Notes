@@ -49,11 +49,11 @@ public class MyNotificationManager {
         cal.set(Calendar.HOUR_OF_DAY, MyTimeFormat.getHoursFromString(action));
         cal.set(Calendar.MINUTE, MyTimeFormat.getMinutesFromString(action));
         cal.set(Calendar.SECOND, 0);
-
-        if(cal.getTimeInMillis()<System.currentTimeMillis())
+        if(cal.getTimeInMillis()<=System.currentTimeMillis())
             cal.add(Calendar.DATE,1);
-
-        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, createPendingIntentWithAction(action));
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
+            am.setWindow(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 10000, createPendingIntentWithAction(action));
+        else am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), createPendingIntentWithAction(action));
     }
     public static void cancelNotification(String action){
         am.cancel(createPendingIntentWithAction(action));
@@ -91,7 +91,7 @@ public class MyNotificationManager {
                 answer.add(arrayForList.getString(i));
             }
         } catch (JSONException e) {
-            L.e("JSON parse fails. JSON is not exist maybe");
+            L.w("JSON parse fails. JSON is not exist maybe");
             return answer;
         }
         return answer;
