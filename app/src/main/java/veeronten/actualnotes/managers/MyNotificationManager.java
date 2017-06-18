@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
@@ -23,6 +24,7 @@ import veeronten.actualnotes.L;
 import veeronten.actualnotes.MyBroadcastReceiver;
 import veeronten.actualnotes.MyTimeFormat;
 import veeronten.actualnotes.R;
+import veeronten.actualnotes.Settings;
 import veeronten.actualnotes.activities.AudioRecordActivity;
 import veeronten.actualnotes.activities.ExploreActivity;
 import veeronten.actualnotes.activities.ImageActivity;
@@ -59,6 +61,9 @@ public class MyNotificationManager {
         am.cancel(createPendingIntentWithAction(action));
     }
 
+    public static void cancelFastAccessNotification(){
+        nm.cancel(0);
+    }
     public static void saveNotifications(ArrayList<String> notifications){
         JSONObject mainObj = new JSONObject();
         JSONArray arrayForList = new JSONArray();
@@ -98,12 +103,24 @@ public class MyNotificationManager {
     }
 
     public static void sendUsualNotification(){
-        if(FileManager.countOfFiles()==0)
-            return;
+        String msg=null;
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N)
+
+
+        if(FileManager.countOfFiles()==0){
+            if(Settings.getSendIfHaveNoNotes())
+                msg="You have no notes";
+            else return;
+        }else msg = "Notes:"+FileManager.countOfFiles();
+
+        Uri soundUri= Uri.parse("android.resource://veeronten.actualnotes/" + R.raw.notification_sound);
+
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ExploreActivity.class), 0))
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setSound(soundUri)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setPriority(Notification.PRIORITY_DEFAULT)
                 // большая картинка
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 //.setTicker(res.getString(R.string.warning)) // текст в строке состояния
@@ -111,16 +128,18 @@ public class MyNotificationManager {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 //.setContentTitle(res.getString(R.string.notifytitle)) // Заголовок уведомления
-                .setContentTitle("Notes:"+FileManager.countOfFiles())
+                .setContentTitle(msg)
                 //.setContentText(res.getString(R.string.notifytext))
                 .setContentText(""); // Текст уведомления
-
+        if(Settings.getUseDefaultNotificationSound())
+            builder.setDefaults(Notification.DEFAULT_SOUND);
         // Notification notification = builder.getNotification(); // до API 16
-        Notification notification = builder.getNotification();
+        Notification notification = builder.build();
         //notification.flags |= Notification.FLAG_INSISTENT;
         nm.notify(1, notification);
     }
     public static void sendFastAccessNotification(){
+        sendUsualNotification();
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         Intent imageIntent = new Intent(context, ImageActivity.class);
         imageIntent.setAction("actualnotes.intent.action.START_CAM");
@@ -159,22 +178,6 @@ public class MyNotificationManager {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         nm.notify(0, notification);
     }
-
-    public static void setFastAccessStatus(Boolean value){
-        SharedPreferences sPref = context.getSharedPreferences("fastAccessStatus", MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putBoolean("fastAccessStatus", value);
-        if(value)
-            sendFastAccessNotification();
-        else
-            nm.cancel(0);
-        ed.apply();
-    }
-    public static Boolean getFastAccessStatus(){
-        SharedPreferences sPref = context.getSharedPreferences("fastAccessStatus", MODE_PRIVATE);
-        return sPref.getBoolean("fastAccessStatus", true);
-    }
-
     private static PendingIntent createPendingIntentWithAction(String action){
         Intent intent = new Intent(context, MyBroadcastReceiver.class);
         intent.setAction(action);

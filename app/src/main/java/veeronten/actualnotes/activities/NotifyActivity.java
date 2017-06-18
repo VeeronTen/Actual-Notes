@@ -19,13 +19,14 @@ import java.util.Comparator;
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.MyTimeFormat;
 import veeronten.actualnotes.R;
+import veeronten.actualnotes.Tutorial;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyNotificationManager;
 
 public class NotifyActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
     ImageButton btnCreate;
     ListView lvNotifications;
-    ArrayList<String> notifyList;
+    public static ArrayList<String> notifyList;
     ArrayAdapter<String> adapter;
     String itemActionToEdit;
     @Override
@@ -33,7 +34,10 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
         FileManager.start(getApplicationContext());
+
         notifyList= MyNotificationManager.downloadNotifications();
+        if(Tutorial.isFirstLaunch(this))
+            Tutorial.prepare(this);
         adapter = new ArrayAdapter<>(NotifyActivity.this, R.layout.item_notif, notifyList);
         btnCreate = (ImageButton)findViewById(R.id.btnCreate);
             btnCreate.setOnClickListener(this);
@@ -41,6 +45,8 @@ public class NotifyActivity extends AppCompatActivity implements View.OnClickLis
             lvNotifications.setOnItemClickListener(this);
             registerForContextMenu(lvNotifications);
             lvNotifications.setAdapter(adapter);
+        if(Tutorial.isFirstLaunch(this))
+            Tutorial.startTutorial(this);
     }
     @Override
     public void onClick(View v){
