@@ -1,8 +1,8 @@
 <vector
-    android:height="60dp"
+    android:height="@dimen/audiorecord_btn_size"
     android:viewportHeight="24.0"
     android:viewportWidth="24.0"
-    android:width="60dp"
+    android:width="@dimen/audiorecord_btn_size"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <path
         android:fillColor="@color/iconsColor"

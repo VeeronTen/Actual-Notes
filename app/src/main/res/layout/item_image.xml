@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:andoid="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/imageBtn"
-    android:padding="3dp">
+    android:padding="@dimen/item_padding_color">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/font"
-        android:padding="5dp">
+        android:background="@color/imageBackground"
+        android:padding="@dimen/item_padding">
 
         <ImageView
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="65dp"
+            android:layout_height="@dimen/item_image_height"
             app:srcCompat="@mipmap/ic_launcher"
             android:id="@+id/imageView"
             android:layout_weight="1" />
@@ -30,7 +29,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            andoid:text="dds"
+            android:textSize="@dimen/text_size"
             android:layout_alignParentBottom="true"
             android:layout_gravity="end"
             android:textColor="@color/textColor" />

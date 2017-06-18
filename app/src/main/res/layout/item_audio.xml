@@ -5,14 +5,16 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/audioBtn"
-    android:padding="3dp">
+    android:padding="@dimen/item_padding_color">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:padding="8dp"
-        android:background="@color/font">
+        android:layout_height="match_parent"
+        android:padding="@dimen/item_padding"
+        android:id="@+id/internalLayout"
+        android:background="@color/audioBackground">
 
 
         <ImageView
@@ -28,15 +30,17 @@
             android:layout_toRightOf="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textSize="@dimen/text_size"
             android:id="@+id/textView" />
 
         <TextView
-            android:textColor="@color/textColor"
-            android:layout_toRightOf="@+id/textView"
-            android:layout_alignParentBottom="true"
-            android:gravity="end"
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/textView"
+            android:gravity="end"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/textColor" />
     </RelativeLayout>
 </LinearLayout>

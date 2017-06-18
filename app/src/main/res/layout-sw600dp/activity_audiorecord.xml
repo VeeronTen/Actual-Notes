@@ -20,34 +20,34 @@
             app:srcCompat="@drawable/ic_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            android:layout_margin="15dp"/>
         <ImageButton
             android:id="@+id/btnSave"
             android:background="@color/button_color_selector"
             app:srcCompat="@drawable/ic_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            android:layout_margin="15dp"/>
         <ImageButton
             android:id="@+id/btnCancel"
             android:background="@color/button_color_selector"
             app:srcCompat="@drawable/ic_again"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            android:layout_margin="15dp"/>
     </LinearLayout>
 
     <ImageView
         app:srcCompat="@drawable/pc_micro"
         android:id="@+id/microImage"
-        android:layout_above="@+id/tvTime"
+        android:layout_above="@id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:text="0 s"
-        android:textSize="60dp"
+        android:textSize="100dp"
         android:textColor="@color/textColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

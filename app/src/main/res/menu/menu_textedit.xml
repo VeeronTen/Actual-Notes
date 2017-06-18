@@ -11,7 +11,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/item_close"
-        android:title="Close without saving"
+        android:title="Close"
         android:icon="@android:drawable/ic_lock_idle_alarm"
         app:showAsAction="never"/>
     <item

@@ -3,4 +3,19 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="text_size">18sp</dimen>
+    <dimen name="text_size_notification">50sp</dimen>
+
+    <dimen name="item_padding">5dp</dimen>
+    <dimen name="item_padding_color">3dp</dimen>
+    <dimen name="item_padding_notification">20dp</dimen>
+
+    <dimen name="item_image_height">65dp</dimen>
+    <dimen name="item_audio_size">30dp</dimen>
+
+    <dimen name="item_space">8.0sp</dimen>
+
+    <dimen name="audiorecord_microsize">180dp</dimen>
+    <dimen name="audiorecord_btn_size">60dp</dimen>
 </resources>

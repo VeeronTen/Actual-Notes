@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/textBtn"
-    android:padding="3dp">
+    android:padding="@dimen/item_padding_color">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/font"
-        android:padding="5dp">
+        android:background="@color/textBackground"
+        android:padding="@dimen/item_padding">
 
         <TextView
             android:textColor="@color/textColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
             android:id="@+id/textView"/>
 
         <TextView
@@ -24,6 +25,7 @@
             android:gravity="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
             android:id="@+id/textView2"/>
     </RelativeLayout>
 </LinearLayout>

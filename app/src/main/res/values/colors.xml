@@ -9,6 +9,11 @@
     <color name="imageBtn">#FF790A</color>
     <color name="commonBtnPressed">#9F38C2</color>
 
+    <color name="textBackground">#101529</color>
+    <color name="audioBackground">#380F0F</color>
+    <color name="audioBackgroundChosen">@color/audioBtn</color>
+    <color name="imageBackground">#2E1602</color>
+
     <color name="font">#111</color>
     <color name="textColor">#FFF</color>
 
