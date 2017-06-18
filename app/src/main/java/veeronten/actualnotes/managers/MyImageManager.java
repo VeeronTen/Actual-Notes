@@ -11,8 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import veeronten.actualnotes.L;
+import veeronten.actualnotes.R;
 
 import static veeronten.actualnotes.managers.FileManager.FileType.IMAGE;
+import static veeronten.actualnotes.managers.FileManager.getContext;
 import static veeronten.actualnotes.managers.FileManager.imageRoot;
 import static veeronten.actualnotes.managers.FileManager.miniRoot;
 
@@ -51,7 +53,11 @@ public class MyImageManager{
         }
 
         try{
-            Bitmap bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),20,20);
+            Bitmap bitMini=null;
+            if(getContext().getResources().getBoolean(R.bool.isTablet))
+                bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),100,100);
+            else
+                bitMini = MyImageManager.decodeSampledBitmapFromResource(dad.getAbsolutePath(),60,60);
             FileOutputStream fileOutputStreamM = new FileOutputStream(mini);
             bitMini.compress(Bitmap.CompressFormat.JPEG,100, fileOutputStreamM);
 

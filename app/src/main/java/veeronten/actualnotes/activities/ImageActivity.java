@@ -85,16 +85,4 @@ public class ImageActivity extends AppCompatActivity{
         }
         MyImageManager.matchMini(destinationFile);
     }
-//    private String getPath(Uri uri) {
-//        try {
-//            String[] projection = {MediaStore.Images.Media.DATA};
-//            Cursor cursor = managedQuery(uri, projection, null, null, null);
-//            startManagingCursor(cursor);
-//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//            cursor.moveToFirst();
-//            return cursor.getString(column_index);
-//        }catch (Exception e){
-//            return uri.getPath();
-//        }
-//    }
 }

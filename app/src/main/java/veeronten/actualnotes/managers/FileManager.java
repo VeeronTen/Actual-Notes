@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import veeronten.actualnotes.L;
+import veeronten.actualnotes.Settings;
 
 public class FileManager {
     public enum FileType{TEXT, IMAGE, AUDIO, MINI}
@@ -51,7 +52,7 @@ public class FileManager {
         for (File f : getRootByType(FileType.AUDIO).listFiles())
             if(f.length()==0)
                 f.delete();
-        if(MyNotificationManager.getFastAccessStatus())
+        if(Settings.getFastAccessStatus())
             MyNotificationManager.sendFastAccessNotification();
     }
     public static Context getContext(){
@@ -70,6 +71,8 @@ public class FileManager {
         }
     }
     public static void removeFile(File fileToRemove){
+        if(fileToRemove==null)
+            return;
         if(FileManager.typeOf(fileToRemove)==FileType.IMAGE) {
             new File(imageRoot, fileToRemove.getName()).delete();
             new File(miniRoot, fileToRemove.getName()).delete();
@@ -108,7 +111,6 @@ public class FileManager {
             }
             long difference=now.getTimeInMillis()-latestSavedImage.lastModified();
             if(difference<6000&&difference>-1) {
-                //context.getContentResolver().delete(Uri.fromFile(latestSavedImage), null,null);
                 success = latestSavedImage.delete();
 
 //                I've seen a lot of answers suggesting the use of
