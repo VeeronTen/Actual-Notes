@@ -2,6 +2,7 @@ package veeronten.actualnotes.activities;
 
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import java.util.TimerTask;
 
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
+import veeronten.actualnotes.Tutorial;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 
@@ -58,6 +60,8 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             btnSave.setVisibility(View.INVISIBLE);
             tvTime = (TextView) findViewById(R.id.tvTime);
             fileToRecord = FileManager.createNewFile(FileManager.FileType.AUDIO);
+
+
         }
     }
     @Override
@@ -77,10 +81,13 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                     btnPlay.setVisibility(View.VISIBLE);
                     btnCancel.setVisibility(View.VISIBLE);
                     btnSave.setVisibility(View.VISIBLE);
+                    if(Tutorial.isFirstLaunch(this))
+                        Tutorial.startTutorial(this);
                 }else{
                     btnPlay.setVisibility(View.INVISIBLE);
                     btnCancel.setVisibility(View.INVISIBLE);
                     btnSave.setVisibility(View.INVISIBLE);
+                    btnPlay.setBackgroundColor(getResources().getColor(R.color.ButtonColor));
                     tvTime.setText("0 s");
                     microImage.setColorFilter(getResources().getColor(R.color.microOn));
                     MyAudioManager.stopPlay();
@@ -91,15 +98,21 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.btnPlay:
-                if(MyAudioManager.isPlaying())
+                if(MyAudioManager.isPlaying()) {
                     MyAudioManager.stopPlay();
-                else
+                    btnPlay.setBackgroundColor(getResources().getColor(R.color.ButtonColor));
+                }
+                else {
                     MyAudioManager.startPlay(fileToRecord);
+                    registerCompletionListener();
+                    btnPlay.setBackgroundColor(getResources().getColor(R.color.ButtonColorFocused));
+                }
                 break;
             case R.id.btnCancel:
                 btnPlay.setVisibility(View.INVISIBLE);
                 btnCancel.setVisibility(View.INVISIBLE);
                 btnSave.setVisibility(View.INVISIBLE);
+                btnPlay.setBackgroundColor(getResources().getColor(R.color.ButtonColor));
                 MyAudioManager.stopPlay();
                 FileManager.removeFile(fileToRecord);
                 fileToRecord = FileManager.createNewFile(FileManager.FileType.AUDIO);
@@ -114,6 +127,8 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPause() {
         super.onPause();
+        if(MyAudioManager.isPlaying())
+            MyAudioManager.stopPlay();
         if(MyAudioManager.recording) {
             MyAudioManager.stopRecording();
             timer.cancel();
@@ -124,6 +139,7 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(this, "File was saved", Toast.LENGTH_SHORT).show();
         MyAudioManager.recording=false;
     }
+
     private class MyTimerTask extends TimerTask{
         int sec=0;
         @Override
@@ -159,18 +175,14 @@ public class AudioRecordActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
-//    private String getPath(Uri uri) {
-//        try {
-//            String[] projection = {MediaStore.Audio.Media.DATA};
-//            Cursor cursor = managedQuery(uri, projection, null, null, null);
-//            startManagingCursor(cursor);
-//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-//            cursor.moveToFirst();
-//            return cursor.getString(column_index);
-//        }catch (Exception e){
-//            return uri.getPath();
-//        }
-//    }
+    private void registerCompletionListener(){
+        MyAudioManager.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                btnPlay.setBackgroundColor(getResources().getColor(R.color.ButtonColor));
+            }
+        });
+    }
 }
 
 

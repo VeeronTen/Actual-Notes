@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,25 +30,29 @@ import java.util.Comparator;
 
 import veeronten.actualnotes.L;
 import veeronten.actualnotes.R;
+import veeronten.actualnotes.Tutorial;
 import veeronten.actualnotes.adapters.MyCommonAdapter;
 import veeronten.actualnotes.managers.FileManager;
 import veeronten.actualnotes.managers.MyAudioManager;
 import veeronten.actualnotes.managers.MyImageManager;
 import veeronten.actualnotes.managers.MyTextManager;
 
+import static veeronten.actualnotes.activities.ExploreActivity.Mode.COMMON;
 import static veeronten.actualnotes.activities.ExploreActivity.Mode.IMAGE;
+import static veeronten.actualnotes.managers.MyAudioManager.viewToStop;
 
 public class ExploreActivity extends AppCompatActivity implements  View.OnClickListener, ListView.OnItemClickListener{
     enum Mode {TEXT, AUDIO, IMAGE, COMMON};
     Mode mode;
     ViewGroup layout;
     ListView list;
-    ArrayList<File> modeFiles;
+    public static ArrayList<File> modeFiles;
     BaseAdapter currentAdapter;
     ImageButton btnCommonMode;
     ImageButton btnAudioMode;
     ImageButton btnTextMode;
     ImageButton btnImageMode;
+
     public final static int CAMERA_PERMISSION_REQUEST = 314;
     public final static int MICROPHONE_PERMISSION_REQUEST = 764;
 
@@ -68,7 +73,7 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             btnTextMode.setOnClickListener(this);
         btnImageMode = (ImageButton) findViewById(R.id.btnImageMode);
             btnImageMode.setOnClickListener(this);
-        commonMode();
+        mode=COMMON;
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -95,10 +100,19 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         switch (FileManager.typeOf(modeFiles.get(position))) {
             case AUDIO:
                 item = modeFiles.get(position);
-                if(MyAudioManager.isPlaying())
+                if(MyAudioManager.isPlaying()) {
                     MyAudioManager.stopPlay();
-                else
+                    if(viewToStop!=null) {
+                        viewToStop.findViewById(R.id.internalLayout).setBackgroundColor(getResources().getColor(R.color.audioBackground));
+                    }
+                    view.findViewById(R.id.internalLayout).setBackgroundColor(getResources().getColor(R.color.audioBackground));
+                }
+                else {
                     MyAudioManager.startPlay(item);
+                    registerCompletionListener(view);
+                    viewToStop=view;
+                    view.findViewById(R.id.internalLayout).setBackgroundColor(getResources().getColor(R.color.audioBackgroundChosen));
+                }
                 break;
             case TEXT:
                 item = modeFiles.get(position);
@@ -216,15 +230,23 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
             }
     }
     private void  commonMode(){
+
         mode = Mode.COMMON;
         modeFiles = FileManager.getFiles(FileManager.FileType.TEXT);
         modeFiles.addAll(FileManager.getFiles(FileManager.FileType.AUDIO));
         modeFiles.addAll(FileManager.getFiles(FileManager.FileType.MINI));
         modeFiles = sort(modeFiles);
+
+        if(Tutorial.isFirstLaunch(this))
+            Tutorial.prepare(this);
+
         currentAdapter = new MyCommonAdapter(this, modeFiles);
         list.setAdapter(currentAdapter);
         resetStyle();
         btnCommonMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_common_pressed));
+
+        if(Tutorial.isFirstLaunch(this))
+            Tutorial.startTutorial(this);
     }
     private void textMode(){
         mode = Mode.TEXT;
@@ -234,6 +256,8 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         list.setAdapter(currentAdapter);
         resetStyle();
         btnTextMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_text));
+        if(Tutorial.isFirstLaunch(this, 2))
+            Tutorial.startTutorial(this, 2);
         }
     private void audioMode(){
         mode = Mode.AUDIO;
@@ -243,6 +267,8 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         list.setAdapter(currentAdapter);
         resetStyle();
         btnAudioMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_audio));
+        if(Tutorial.isFirstLaunch(this, 3))
+            Tutorial.startTutorial(this, 3);
     }
     private void imageMode(){
         mode = IMAGE;
@@ -252,6 +278,8 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
         list.setAdapter(currentAdapter);
         resetStyle();
         btnImageMode.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_image));
+        if(Tutorial.isFirstLaunch(this, 1))
+            Tutorial.startTutorial(this, 1);
     }
     private ArrayList<File> sort(ArrayList<File> sourse){
         ArrayList<File> answer = new ArrayList<>();
@@ -309,5 +337,13 @@ public class ExploreActivity extends AppCompatActivity implements  View.OnClickL
                 L.i("permissions were gotten");
             }
             else Toast.makeText(getApplicationContext(), "You must allow permission record audio to your mobile device.", Toast.LENGTH_LONG).show();
+    }
+    public void registerCompletionListener(final View v){
+        MyAudioManager.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                v.findViewById(R.id.internalLayout).setBackgroundColor(getResources().getColor(R.color.audioBackground));
+            }
+        });
     }
 }
