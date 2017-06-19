@@ -9,8 +9,8 @@ android {
         applicationId "veeronten.actualnotes"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 6
-        versionName "1.5"
+        versionCode 7
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,4 +30,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
 }

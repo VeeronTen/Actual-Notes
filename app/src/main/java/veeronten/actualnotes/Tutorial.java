@@ -3,6 +3,7 @@ package veeronten.actualnotes;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -119,12 +120,12 @@ public class Tutorial {
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity);
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(allScreen, "Main screen","Here is list of your notes. In the lower right corner of every notes you will see " +
-                "its age. At the moment age of the first note is "+view.getText(), "OK");
-        sequence.addSequenceItem(allScreen,"Press to interact, hold to share or delete", "OK");
-        sequence.addSequenceItem(activity.findViewById(R.id.buttons), "Choose mode to show only photo, text or audio notes, or choose " +
-                "common mode to show them all", "OK");
-        sequence.addSequenceItem(allScreen,"There are reminder and settings in the upper right corner of the screen", "OK");
+        sequence.addSequenceItem(allScreen, "MAIN SCREEN\n\nHere is the list of your notes. In the lower right corner of every notes you will see " +
+                "its age. At the moment the age of the oldest note is "+view.getText(),"", "OK");
+        sequence.addSequenceItem(allScreen,"\nPress to interact\nHold to share or delete","", "OK");
+        sequence.addSequenceItem(allScreen, "\nChoose mode through the buttons at the bottom of the screen to show only photo-, text- or audio notes, or choose " +
+                "common mode to show them all","", "OK");
+        sequence.addSequenceItem(allScreen,"\nThere are reminder and settings in the upper right corner of the screen","", "OK");
 
         sequence.start();
     }
@@ -143,8 +144,8 @@ public class Tutorial {
         sequence.setConfig(config);
 
 
-        sequence.addSequenceItem(allScreen, "specific modes","in specific modes you can see notes of certain type only. "+word+" notes for this mode", "OK");
-        sequence.addSequenceItem(btnToFocus,"press PLUS to create a new one", "OK");
+        sequence.addSequenceItem(allScreen, "SPECIFIC MODES\n\nIn specific modes you can see notes of certain type only. "+word+" notes for this mode e.g.","", "OK");
+        sequence.addSequenceItem(btnToFocus,"\nPress PLUS to create a new one","", "OK");
 
         sequence.start();
     }
@@ -155,7 +156,10 @@ public class Tutorial {
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity);
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(allScreen, "Text note","Use menu to save, close or delete yor text note e.g.", "OK");
+        if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.JELLY_BEAN)
+            sequence.addSequenceItem(allScreen, "TEXT NOTE\n\nUse button in the upper right corner to save\n","", "OK");
+        else
+            sequence.addSequenceItem(allScreen, "TEXT NOTE\n\nUse menu to save, close or delete yor text note","", "OK");
 
         sequence.start();
 
@@ -172,9 +176,9 @@ public class Tutorial {
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity);
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(btnPlay, "Audio note","play/stop", "OK");
-        sequence.addSequenceItem(btnSave,"save", "OK");
-        sequence.addSequenceItem(btnCancel,"restart", "OK");
+        sequence.addSequenceItem(btnPlay, "AUDIO NOTE\n\nPlay or stop","", "OK");
+        sequence.addSequenceItem(btnSave,"\nSave","", "OK");
+        sequence.addSequenceItem(btnCancel,"\nRestart","", "OK");
 
         sequence.start();
     }
@@ -189,12 +193,12 @@ public class Tutorial {
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity);
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(allScreen,"Notifications", "You will get notification about count of your notes everyday at the set time. Now "
-                +view.getText()+" is available", "OK");
-        sequence.addSequenceItem(btnCreate,"To set another reminder ", "OK");
-        sequence.addSequenceItem(allScreen,"press to edit\nhold to delete", "OK");
-        sequence.addSequenceItem(allScreen,"Troubleshoot","If notifications don't work (don't make sounds e.g.) try to change priority " +
-                "of Actual Notes notifications through the notification settings in your device", "KO");
+        sequence.addSequenceItem(allScreen,"NOTIFICATIONS\n\nYou will get notification about count of your notes everyday at the set time. At " +
+                "the moment the earliest reminder is "+view.getText(),"","OK");
+        sequence.addSequenceItem(btnCreate,"Press the button to set another reminder","", "OK");
+        sequence.addSequenceItem(allScreen,"\nPress to edit\nHold to delete","", "OK");
+        sequence.addSequenceItem(allScreen,"TROUBLESHOOTING\n\nIf notifications don't work (don't make sounds e.g.) try to change priority " +
+                "of Actual Notes notifications through the notification settings in your device","", "KO");
         sequence.start();
     }
 

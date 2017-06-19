@@ -105,9 +105,6 @@ public class MyNotificationManager {
     public static void sendUsualNotification(){
         String msg=null;
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N)
-
-
         if(FileManager.countOfFiles()==0){
             if(Settings.getSendIfHaveNoNotes())
                 msg="You have no notes";
