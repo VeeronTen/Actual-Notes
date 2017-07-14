@@ -136,7 +136,7 @@ public class MyNotificationManager {
         nm.notify(1, notification);
     }
     public static void sendFastAccessNotification(){
-        sendUsualNotification();
+        //sendUsualNotification();
         nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         Intent imageIntent = new Intent(context, ImageActivity.class);
         imageIntent.setAction("actualnotes.intent.action.START_CAM");
